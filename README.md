@@ -2,9 +2,9 @@
 # RNBridge [![](https://jitpack.io/v/zorozhao/RNBridge.svg)](https://jitpack.io/#zorozhao/RNBridge)
 The library of the bridge between Android native and react native
 
-## 集成步骤
+## android
 
-1.CAT
+1.gradle
 
 * Add it in your root build.gradle at the end of repositories
 
@@ -19,4 +19,4 @@ The library of the bridge between Android native and react native
 	        compile 'com.github.zorozhao:RNBridge:v0.01'
 	}
    
-  
+ 
