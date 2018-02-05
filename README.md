@@ -1,4 +1,5 @@
-rn的基础功能
+# RNBridge
+The library of the bridge between Android native and react native
 
 1、完善各个功能、运行环境
 2、添加对应的插件
