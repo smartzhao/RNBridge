@@ -11,13 +11,18 @@ The library of the bridge between Android native and react native
     	allprojects {
 		repositories {
 			maven { url 'https://jitpack.io' }
+			maven {
+        			   // All of React Native (JS, Android binaries) is installed from npm
+     			       url "$projectDir/../../node_modules/react-native/android"//Fixme 增加RN库
+       				 }
 		}
 	}
     	
 * Add the dependency
-	dependencies {
-	        compile 'com.github.zorozhao:RNBridge:v0.01'
-	}
+
+		dependencies {
+	    	    compile 'com.github.zorozhao:RNBridge:v0.01'
+		}
    
  2. api
  
