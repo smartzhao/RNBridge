@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "com.ecarx.geely.android"
+        applicationId "com.zhaochong.android"
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
@@ -52,5 +52,6 @@ dependencies {
     compile 'com.facebook.fresco:fresco:1.1.0'
     //RN渐变色组件
     compile project(':react-native-linear-gradient')
-    compile project(path: ':rnbridge')
+   // compile project(path: ':rnbridge')
+    compile 'com.github.zorozhao:RNBridge:v0.01'
 }

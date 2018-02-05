@@ -1,4 +1,4 @@
-package com.ecarx.geely.android;
+package com.zhaochong.android;
 
 
 import android.app.Application;

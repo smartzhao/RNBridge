@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ecarx.geely.android.rnactivity.DataMallReactActivity">
+    tools:context="com.zhaochong.android.rnactivity.DataMallReactActivity">
 
 </android.support.constraint.ConstraintLayout>
