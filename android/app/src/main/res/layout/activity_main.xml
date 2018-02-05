@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".MainActivity">
+    <Button
+        android:id="@+id/btn_load"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="66dp"
+        android:padding="10dp"
+        android:text="加載最新Bundle"
+        android:onClick="load"
+        android:textColor="@android:color/white"
+        android:background="@color/colorPrimary"
+        />
+
+    <Button
+        android:id="@+id/btn_go_rn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/button"
+        android:layout_alignLeft="@+id/btn_load"
+        android:layout_alignStart="@+id/btn_load"
+        android:layout_marginBottom="14dp"
+        android:background="@color/colorPrimary"
+        android:onClick="torn"
+        android:padding="10dp"
+        android:text="进入RN"
+        android:textColor="@android:color/white" />
+    <Button
+        android:id="@+id/btn_go_liuliang"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/btn_load"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:text="进入RN-流量商城"
+        android:onClick="toliuliang"
+        android:textColor="@android:color/white"
+        android:background="@color/colorPrimary"
+        />
+
+    <Button
+        android:id="@+id/btn_go_vpcenter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_go_rn"
+        android:layout_alignStart="@+id/btn_go_rn"
+        android:layout_below="@+id/btn_go_liuliang"
+        android:layout_marginTop="16dp"
+        android:background="@color/colorPrimary"
+        android:onClick="tovpcenter"
+        android:padding="10dp"
+        android:text="进入RN-会员中心"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_go_liuliang"
+        android:layout_alignParentBottom="true"
+        android:layout_alignStart="@+id/btn_go_liuliang"
+        android:layout_marginBottom="80dp"
+        android:background="@color/colorPrimary"
+        android:onClick="sendMsgToRN"
+        android:padding="10dp"
+        android:text="向RN发消息"
+        android:textColor="@android:color/white" />
+</RelativeLayout>

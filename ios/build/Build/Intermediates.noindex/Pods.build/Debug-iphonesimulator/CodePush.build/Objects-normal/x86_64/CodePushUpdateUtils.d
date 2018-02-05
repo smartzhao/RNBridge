@@ -1,0 +1,36 @@
+dependencies: \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/CodePushUpdateUtils.m \
+  /Users/zhaochong/work/project/android-project/rn-base-project/ios/Pods/Target\ Support\ Files/CodePush/CodePush-prefix.pch \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/CodePush.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native/React/Modules/RCTEventEmitter.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native/React/Base/RCTBridge.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native/React/Base/RCTBridgeDelegate.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native/React/Base/RCTJavaScriptLoader.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native/React/Base/RCTDefines.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native/React/Base/RCTBridgeModule.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native/React/Base/RCTFrameUpdate.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native/React/Base/RCTInvalidating.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/FrameworkSupplement/JWT.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Coding/JWTCoding.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Coding/JWTCoding+ResultTypes.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Coding/JWTCoding+VersionOne.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Coding/JWTCoding+VersionTwo.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Coding/JWTCoding+VersionThree.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Algorithms/Base/JWTAlgorithm.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Supplement/JWTDeprecations.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Algorithms/RSFamily/JWTRSAlgorithm.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Algorithms/Base/JWTAlgorithmFactory.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Algorithms/Base/JWTAlgorithmNone.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Algorithms/HSFamily/JWTAlgorithmHSBase.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Algorithms/RSFamily/JWTAlgorithmRSBase.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Algorithms/Holders/JWTAlgorithmDataHolder.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Supplement/JWTBase64Coder.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Algorithms/Holders/JWTAlgorithmDataHolderChain.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/ClaimSet/JWTClaimsSet.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/ClaimSet/JWTClaim.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/ClaimSet/JWTClaimsSetSerializer.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/ClaimSet/JWTClaimsSetVerifier.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Supplement/JWTErrorDescription.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Algorithms/RSFamily/RSKeys/JWTCryptoKey.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Algorithms/RSFamily/RSKeys/JWTCryptoKeyExtractor.h \
+  /Users/zhaochong/work/project/android-project/rn-base-project/node_modules/react-native-code-push/ios/CodePush/JWT/Core/Algorithms/RSFamily/RSKeys/JWTCryptoSecurity.h
