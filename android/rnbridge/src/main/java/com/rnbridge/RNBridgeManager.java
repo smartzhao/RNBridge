@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.rnbridge.callback.Callback;
 import com.rnbridge.code.ErrorCode;
@@ -21,6 +22,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nullable;
+
+import static com.facebook.react.common.ReactConstants.TAG;
 
 /**
  * Created by zhaochong on 2018/2/1.
@@ -51,10 +54,11 @@ public class RNBridgeManager {
     public void init(Context context, Callback callback) {
         if (context == null) {
             callback.onError(ErrorCode.ERROR_CODE_00000);
+        }else {
+            callback.onResult("success");
+            setRNContext(context);
+            SoLoader.init(getRNContext(), false);
         }
-        setRNContext(context);
-        SoLoader.init(getRNContext(), false);
-
     }
 
     public ReactNativeHost mReactNativeHost = new ReactNativeHost((Application) getRNContext()) {
@@ -63,11 +67,18 @@ public class RNBridgeManager {
         @Override
         protected String getJSBundleFile() {
             File file = new File(FileConstant.JS_BUNDLE_LOCAL_PATH);
+            Log.d(TAG, ">>>> file: "  +  file.getAbsolutePath());
             if (file != null && file.exists()) {
                 return FileConstant.JS_BUNDLE_LOCAL_PATH;
             } else {
                 return super.getJSBundleFile();
             }
+        }
+        @Nullable
+        @Override
+        protected String getBundleAssetName() {
+            Log.d(TAG, ">>>> BundleAssetName: "  + super.getBundleAssetName());
+            return "index.VPCenter.bundle";
         }
 
         @Override
@@ -77,13 +88,13 @@ public class RNBridgeManager {
 
         @Override
         protected List<ReactPackage> getPackages() {
+            Log.d(TAG, ">>>> mCommPackage: "  +  mCommPackage.mModule);
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
                     mCommPackage
 
             );
         }
-
     };
 
     /**
@@ -92,13 +103,15 @@ public class RNBridgeManager {
      * @param bundleAssetName
      * @param jsMainModulePath
      * @param moduleName
+     * @param bundleParams
      */
-    public static void startRNActivity(Context context ,String bundleAssetName ,String jsMainModulePath,String moduleName) {
+    public static void startRNActivity(Context context ,String bundleAssetName ,String jsMainModulePath,String moduleName,Bundle bundleParams) {
         Intent intent = new Intent(context, RNActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("bundleAssetName", bundleAssetName);
         bundle.putString("jsMainModulePath", jsMainModulePath);
         bundle.putString("moduleName", moduleName);
+        bundle.putBundle("bundleParams",bundleParams);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }
@@ -107,12 +120,15 @@ public class RNBridgeManager {
      *  跳转到RN界面
      * @param context
      * @param mReactInstanceManager
+     * @param bundleParams
+     * @param moduleName
      */
-    public static void startRNActivity(Context context ,String moduleName ,ReactInstanceManager mReactInstanceManager) {
+    public static void startRNActivity(Context context ,String moduleName ,ReactInstanceManager mReactInstanceManager,Bundle bundleParams) {
         RNBridgeManager.getInstance().setReactInstanceManager(mReactInstanceManager);
         Intent intent = new Intent(context, RNActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("moduleName", moduleName);
+        bundle.putBundle("bundleParams",bundleParams);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }
@@ -144,7 +160,7 @@ public class RNBridgeManager {
      * 获取Application实例
      */
     public void setRNContext(Context context) {
-        this.context = context.getApplicationContext();
+        this.context = context;
     }
 
     public Context getRNContext() {

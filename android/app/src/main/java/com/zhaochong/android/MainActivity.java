@@ -12,6 +12,8 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.rnbridge.preloadreact.ReactNativePreLoader;
 import com.rnbridge.rnactivity.MyReactActivity;
 import com.rnbridge.RNBridgeManager;
 import com.rnbridge.constants.FileConstant;
@@ -40,17 +42,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if(hasFocus) {
-            //ReactNativePreLoader.preLoad(MainActivity.this,"RnBase");
+        if (hasFocus) {
+             // ReactNativePreLoader.preLoad(MainActivity.this,"RnBase");
         }
     }
 
     /**
      * 向RN发送消息
+     *
      * @param v
      */
     public void sendMsgToRN(View v) {
         if (RNBridgeManager.getReactPackage() != null) {
+            if (RNBridgeManager.getReactPackage().mModule == null) {
+                Toast.makeText(this, "mModule is " + RNBridgeManager.getReactPackage().mModule, Toast.LENGTH_SHORT).show();
+                return;
+            }
             RNBridgeManager.getReactPackage().mModule.nativeCallRn("hello");
         }
     }
@@ -58,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * 下载更新包
+     *
      * @param v
      */
     public void load(View v) {
@@ -85,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
         DownloadManager.Request request = new DownloadManager
                 .Request(Uri.parse(FileConstant.JS_BUNDLE_REMOTE_URL));
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN);
-        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE| DownloadManager.Request.NETWORK_WIFI);
-        request.setDestinationUri(Uri.parse("file://"+ FileConstant.JS_PATCH_LOCAL_PATH));
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_MOBILE | DownloadManager.Request.NETWORK_WIFI);
+        request.setDestinationUri(Uri.parse("file://" + FileConstant.JS_PATCH_LOCAL_PATH));
         mDownLoadId = downloadManager.enqueue(request);
     }
 
@@ -95,39 +103,44 @@ public class MainActivity extends AppCompatActivity {
      */
     private void registeReceiver() {
         localReceiver = new CompleteReceiver();
-        registerReceiver(localReceiver,new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+        registerReceiver(localReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
     /**
      * 跳转到RN界面
+     *
      * @param view
      */
     public void toliuliang(View view) {
-        RNBridgeManager.startRNActivity(MainActivity.this,"index.dataMall.bundle","index.dataMall","RnBase");
+        RNBridgeManager.startRNActivity(MainActivity.this, "index.dataMall.bundle", "index.dataMall", "RnBase",null);
     }
 
     public void tovpcenter(View view) {
-       // RNBridgeManager.startRNActivity(MainActivity.this,"index.VPCenter.bundle","index.VPCenter","RnBase");
-        RNBridgeManager.startRNActivity(MainActivity.this,"RnBase", ReactInstanceManager.builder()
+        Bundle bundle = new Bundle();
+        bundle.putString("accessToken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwNTA0IiwiYXVkIjoiODY5OTk5MDI4NTkxNzY5IiwiaWF0IjoxNTE5Njk3NTcxLCJuYmYiOjE1MTk2OTc1NzEsImV4cCI6MTUxOTY5NzU3ODg0NiwiaXNzIjoiZWNhcngiLCJqdGkiOjE1MTk2OTc1NzEsImNsaWVudElkIjoiODY5OTk5MDI4NTkxNzY5IiwidWlkIjoiMTAwMDUwNCIsImVudiI6InRlc3RpbmcifQ.B-4jBtoyuTmjCMaHnTFPPzZvOBf0hho-o4Nxbz0Cn2c");
+        bundle.putString("userId","1000504");
+        RNBridgeManager.startRNActivity(MainActivity.this, "RnBase", ReactInstanceManager.builder()
                 .setApplication(getApplication())
                 .setBundleAssetName("index.VPCenter.bundle")
                 .setJSMainModulePath("index.VPCenter")
                 .addPackage(new MainReactPackage())
                 .setUseDeveloperSupport(true)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
-                .build());
+                .build(),
+                bundle
+                );
     }
 
     public void torn(View view) {
-        startActivity(new Intent(this,MyReactActivity.class));
+        startActivity(new Intent(this, MyReactActivity.class));
     }
 
     public class CompleteReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            long completeId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID,-1);
-            if(completeId == mDownLoadId) {
+            long completeId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
+            if (completeId == mDownLoadId) {
                 HotUpdate.handleZIP(getApplicationContext());
             }
         }

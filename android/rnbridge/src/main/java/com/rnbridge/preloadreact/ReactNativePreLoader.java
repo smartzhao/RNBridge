@@ -28,6 +28,9 @@ public class ReactNativePreLoader {
         if (CACHE.get(componentName) != null) {
             return;
         }
+        if (!((ReactApplication) activity.getApplication()).getReactNativeHost().hasInstance()){
+            return;
+        }
         // 1.创建ReactRootView
         ReactRootView rootView = new ReactRootView(activity);
             rootView.startReactApplication(

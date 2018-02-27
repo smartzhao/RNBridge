@@ -17,6 +17,7 @@ public class RNActivity extends Activity implements DefaultHardwareBackBtnHandle
     public String bundleAssetName;
     public String jsMainModulePath;
     public String moduleName;
+    public Bundle bundleParams;
 
 
     @Override
@@ -27,6 +28,7 @@ public class RNActivity extends Activity implements DefaultHardwareBackBtnHandle
         bundleAssetName = bundle.getString("bundleAssetName");
         jsMainModulePath = bundle.getString("jsMainModulePath");
         moduleName = bundle.getString("moduleName");
+        bundleParams = bundle.getBundle("bundleParams");
         mReactRootView = new ReactRootView(this);
         if ( RNBridgeManager.getInstance().getReactInstanceManager() != null) {
             mReactInstanceManager = RNBridgeManager.getInstance().getReactInstanceManager();
@@ -40,7 +42,7 @@ public class RNActivity extends Activity implements DefaultHardwareBackBtnHandle
                     .setInitialLifecycleState(LifecycleState.RESUMED)
                     .build();
         }
-        mReactRootView.startReactApplication(mReactInstanceManager, moduleName, null);
+        mReactRootView.startReactApplication(mReactInstanceManager, moduleName, bundleParams);
         setContentView(mReactRootView);
     }
 
