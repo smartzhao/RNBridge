@@ -69,5 +69,5 @@ The library of the bridge between Android native and react native
             .build());
 	    
 ## 联系方式15712893500	    
-![image](http://oss-update.g-netlink.net/other/weixin_photo/WechatIMG876.jpeg)
+![image](http://ykt-update.oss-cn-hangzhou.aliyuncs.com/other/weixin_photo/WechatIMG876.jpeg)
 
