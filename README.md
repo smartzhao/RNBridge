@@ -1,7 +1,6 @@
 #待完善
 # RNBridge [![](https://jitpack.io/v/zorozhao/RNBridge.svg)](https://jitpack.io/#zorozhao/RNBridge)
 The library of the bridge between Android native and react native
-## 联系方式15712893500
 ## android
 
 1.gradle
@@ -68,3 +67,7 @@ The library of the bridge between Android native and react native
             .setUseDeveloperSupport(true)
             .setInitialLifecycleState(LifecycleState.RESUMED)
             .build());
+	    
+## 联系方式15712893500	    
+![image](http://ykt-update.oss-cn-hangzhou.aliyuncs.com/other/weixin_photo/WechatIMG876.jpeg)
+
