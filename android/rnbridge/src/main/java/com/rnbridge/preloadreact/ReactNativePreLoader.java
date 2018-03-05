@@ -1,14 +1,23 @@
 package com.rnbridge.preloadreact;
 
 import android.app.Activity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
 
 import com.facebook.react.ReactApplication;
+import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactRootView;
+import com.facebook.react.common.LifecycleState;
+import com.facebook.react.shell.MainReactPackage;
+import com.rnbridge.RNBridgeManager;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.annotation.Nullable;
+
+import static com.facebook.react.common.ReactConstants.TAG;
 
 /**
  * 预加载工具类
@@ -16,33 +25,33 @@ import java.util.Map;
  */
 public class ReactNativePreLoader {
 
-    private static final Map<String,ReactRootView> CACHE = new HashMap<>();
+    private static final Map<String, ReactRootView> CACHE = new HashMap<>();
 
     /**
      * 初始化ReactRootView，并添加到缓存
-     * @param activity
+     *
+     * @param reactInstanceManager
      * @param componentName
      */
-    public static void preLoad(Activity activity, String componentName) {
-
-        if (CACHE.get(componentName) != null) {
-            return;
-        }
-        if (!((ReactApplication) activity.getApplication()).getReactNativeHost().hasInstance()){
+    public static void preLoad(Activity activity, ReactInstanceManager reactInstanceManager, String componentName, String bundleAssetName, @Nullable Bundle initialProperties) {
+        //TODO 通过资源bundle名称来区分缓存
+        if (CACHE.get(bundleAssetName) != null) {
             return;
         }
         // 1.创建ReactRootView
         ReactRootView rootView = new ReactRootView(activity);
-            rootView.startReactApplication(
-                    ((ReactApplication) activity.getApplication()).getReactNativeHost().getReactInstanceManager(),
-                    componentName,
-                    null);
+        rootView.startReactApplication(
+                reactInstanceManager,
+                componentName,
+                initialProperties);
+
         // 2.添加到缓存
-        CACHE.put(componentName, rootView);
+        CACHE.put(bundleAssetName, rootView);
     }
 
     /**
      * 获取ReactRootView
+     *
      * @param componentName
      * @return
      */
@@ -52,6 +61,7 @@ public class ReactNativePreLoader {
 
     /**
      * 从当前界面移除 ReactRootView
+     *
      * @param component
      */
     public static void deatchView(String component) {
@@ -62,7 +72,7 @@ public class ReactNativePreLoader {
                 parent.removeView(rootView);
             }
         } catch (Throwable e) {
-            Log.e("ReactNativePreLoader",e.getMessage());
+            Log.e("ReactNativePreLoader", e.getMessage());
         }
     }
 }

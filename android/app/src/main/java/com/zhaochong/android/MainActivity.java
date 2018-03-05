@@ -1,5 +1,6 @@
 package com.zhaochong.android;
 
+import android.app.Application;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,6 +13,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.react.ReactApplication;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.rnbridge.preloadreact.ReactNativePreLoader;
 import com.rnbridge.rnactivity.MyReactActivity;
@@ -26,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private long mDownLoadId;
     private CompleteReceiver localReceiver;
-
+    Bundle bundle = new Bundle();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +44,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+        bundle.putString("accessToken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwNTA0IiwiYXVkIjoiYnJvd3NlciIsImlhdCI6MTUyMDA2MjM3NiwibmJmIjoxNTIwMDYyMzc2LCJleHAiOjE1MjAwNjIzODM4NDEsImlzcyI6ImVjYXJ4IiwianRpIjoxNTIwMDYyMzc2LCJjbGllbnRJZCI6ImJyb3dzZXIiLCJ1aWQiOiIxMDAwNTA0IiwiYXBwSWQiOiJNODIwaWdpaTVsTDR0Y3kiLCJlbnYiOiJ0ZXN0aW5nIn0.NuBQV0i9Bl1IxVnBENDmEUXjdW8NIrGQ7NV5KYhy-qI");
+        bundle.putString("userId","15712893500");
         if (hasFocus) {
-             // ReactNativePreLoader.preLoad(MainActivity.this,"RnBase");
+            //FIXME 首先禁止预加载，防止内存过大
+          /*  RNBridgeManager.getInstance().preLoad(MainActivity.this,
+                    "RnBase",
+                    "index.VPCenter.bundle",
+                    ((ReactApplication)getApplication()).getReactNativeHost().getReactInstanceManager(),
+                    bundle);
+            RNBridgeManager.getInstance().preLoad(MainActivity.this,
+                    "RnBase",
+                    "index.dataMall.bundle",
+                    ((ReactApplication)getApplication()).getReactNativeHost().getReactInstanceManager(),
+                    bundle);*/
         }
     }
 
@@ -53,12 +67,12 @@ public class MainActivity extends AppCompatActivity {
      * @param v
      */
     public void sendMsgToRN(View v) {
-        if (RNBridgeManager.getReactPackage() != null) {
+        if (MainApplication.getReactPackage() != null) {
             if (RNBridgeManager.getReactPackage().mModule == null) {
                 Toast.makeText(this, "mModule is " + RNBridgeManager.getReactPackage().mModule, Toast.LENGTH_SHORT).show();
                 return;
             }
-            RNBridgeManager.getReactPackage().mModule.nativeCallRn("hello");
+            MainApplication.getReactPackage().mModule.nativeCallRn("hello");
         }
     }
 
@@ -112,19 +126,18 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void toliuliang(View view) {
-        RNBridgeManager.startRNActivity(MainActivity.this, "index.dataMall.bundle", "index.dataMall", "RnBase",null);
+        RNBridgeManager.bundleAssetName = "index.dataMall.bundle";
+        startActivity(new Intent(this, MyReactActivity.class));
+       // RNBridgeManager.startRNActivity(MainActivity.this, "index.dataMall.bundle", "index.dataMall", "RnBase",null);
     }
 
     public void tovpcenter(View view) {
-        Bundle bundle = new Bundle();
-        bundle.putString("accessToken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwNTA0IiwiYXVkIjoiODY5OTk5MDI4NTkxNzY5IiwiaWF0IjoxNTE5Njk3NTcxLCJuYmYiOjE1MTk2OTc1NzEsImV4cCI6MTUxOTY5NzU3ODg0NiwiaXNzIjoiZWNhcngiLCJqdGkiOjE1MTk2OTc1NzEsImNsaWVudElkIjoiODY5OTk5MDI4NTkxNzY5IiwidWlkIjoiMTAwMDUwNCIsImVudiI6InRlc3RpbmcifQ.B-4jBtoyuTmjCMaHnTFPPzZvOBf0hho-o4Nxbz0Cn2c");
-        bundle.putString("userId","1000504");
         RNBridgeManager.startRNActivity(MainActivity.this, "RnBase", ReactInstanceManager.builder()
                 .setApplication(getApplication())
                 .setBundleAssetName("index.VPCenter.bundle")
                 .setJSMainModulePath("index.VPCenter")
                 .addPackage(new MainReactPackage())
-                .setUseDeveloperSupport(true)
+                .setUseDeveloperSupport(false)
                 .setInitialLifecycleState(LifecycleState.RESUMED)
                 .build(),
                 bundle
@@ -132,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void torn(View view) {
+        RNBridgeManager.bundleAssetName = "index.VPCenter.bundle";
         startActivity(new Intent(this, MyReactActivity.class));
     }
 

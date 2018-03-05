@@ -19,7 +19,7 @@
         <activity
             android:name=".rnactivity.MyReactActivity"
             android:label="@string/app_name" />
-        <activity android:name=".rnactivity.RNActivity"></activity>
+        <activity android:name=".rnactivity.RNActivity" />
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
     </application>
 

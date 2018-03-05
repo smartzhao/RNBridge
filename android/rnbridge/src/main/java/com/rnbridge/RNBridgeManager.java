@@ -1,15 +1,18 @@
 package com.rnbridge;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.ArrayMap;
 import android.util.Log;
 
 import com.rnbridge.callback.Callback;
 import com.rnbridge.code.ErrorCode;
 import com.rnbridge.communication.CommPackage;
 import com.rnbridge.constants.FileConstant;
+import com.rnbridge.preloadreact.ReactNativePreLoader;
 import com.rnbridge.rnactivity.RNActivity;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
@@ -19,7 +22,9 @@ import com.facebook.soloader.SoLoader;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -32,10 +37,13 @@ import static com.facebook.react.common.ReactConstants.TAG;
 
 public class RNBridgeManager {
     private static RNBridgeManager instance;  //静态变量
-    public Context context;
+    public Application context;
     public Callback callback;
     private ReactInstanceManager mReactInstanceManager;
-    public static final CommPackage mCommPackage = new CommPackage();
+    private static final CommPackage mCommPackage = new CommPackage();
+    private ReactNativeHost mReactNativeHost;
+    public static  String bundleAssetName = "index.dataMall.bundle";// TODO 临时调试，后面写成index.Android.bundle
+    private Map<String,ReactNativeHost> reactNativeHostMap;
 
     private RNBridgeManager() {
     }  //私有构造函数
@@ -51,51 +59,18 @@ public class RNBridgeManager {
         return instance;
     }
 
-    public void init(Context context, Callback callback) {
+    public void init(Application context,Map<String,ReactNativeHost> reactNativeHostMap, Callback callback) {
         if (context == null) {
             callback.onError(ErrorCode.ERROR_CODE_00000);
         }else {
             callback.onResult("success");
-            setRNContext(context);
+            this.context = context;
+            setReactNativeHostMap(reactNativeHostMap);
+        //    setRNContext(context);
             SoLoader.init(getRNContext(), false);
         }
     }
 
-    public ReactNativeHost mReactNativeHost = new ReactNativeHost((Application) getRNContext()) {
-
-        @Nullable
-        @Override
-        protected String getJSBundleFile() {
-            File file = new File(FileConstant.JS_BUNDLE_LOCAL_PATH);
-            Log.d(TAG, ">>>> file: "  +  file.getAbsolutePath());
-            if (file != null && file.exists()) {
-                return FileConstant.JS_BUNDLE_LOCAL_PATH;
-            } else {
-                return super.getJSBundleFile();
-            }
-        }
-        @Nullable
-        @Override
-        protected String getBundleAssetName() {
-            Log.d(TAG, ">>>> BundleAssetName: "  + super.getBundleAssetName());
-            return "index.VPCenter.bundle";
-        }
-
-        @Override
-        public boolean getUseDeveloperSupport() {
-            return BuildConfig.DEBUG;
-        }
-
-        @Override
-        protected List<ReactPackage> getPackages() {
-            Log.d(TAG, ">>>> mCommPackage: "  +  mCommPackage.mModule);
-            return Arrays.<ReactPackage>asList(
-                    new MainReactPackage(),
-                    mCommPackage
-
-            );
-        }
-    };
 
     /**
      *  跳转到RN界面
@@ -137,6 +112,12 @@ public class RNBridgeManager {
         this.mReactInstanceManager = mReactInstanceManager;
     }
 
+    public static void preLoad(Activity activity,String componentName, String bundleassetname,ReactInstanceManager reactInstanceManager, @Nullable Bundle initialProperties) {
+        bundleAssetName = bundleassetname;
+        Log.d(TAG, ">>>>preLoad bundleAssetName:  " + bundleAssetName);
+        ReactNativePreLoader.preLoad(activity,reactInstanceManager,componentName,bundleassetname,initialProperties);
+    }
+
     public  ReactInstanceManager getReactInstanceManager() {
         return mReactInstanceManager;
     }
@@ -155,15 +136,34 @@ public class RNBridgeManager {
     public static CommPackage getReactPackage() {
         return mCommPackage;
     }
+    /**
+     * 获取 Application中 ReactNativeHost
+     * @return
+     */
+    public ReactNativeHost getReactNativeHost() {
+        if (getReactNativeHostMap().get(bundleAssetName) != null) {
+            return getReactNativeHostMap().get(bundleAssetName);
+        }
+      return  null;
+    }
 
     /**
      * 获取Application实例
      */
-    public void setRNContext(Context context) {
+    public void setRNContext(Application context) {
         this.context = context;
     }
 
     public Context getRNContext() {
         return context;
     }
+
+    public Map<String, ReactNativeHost> getReactNativeHostMap() {
+        return reactNativeHostMap;
+    }
+
+    public void setReactNativeHostMap(Map<String, ReactNativeHost> reactNativeHostMap) {
+        this.reactNativeHostMap = reactNativeHostMap;
+    }
+
 }
