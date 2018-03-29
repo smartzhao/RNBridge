@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.facebook.react.ReactActivity;
+import com.facebook.react.ReactInstanceManager;
+import com.facebook.react.ReactNativeHost;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.modules.core.PermissionAwareActivity;
 import com.facebook.react.modules.core.PermissionListener;
+import com.rnbridge.callback.ICustomProgress;
 
 import javax.annotation.Nullable;
 
@@ -24,15 +27,46 @@ public class PreLoadReactActivity extends ReactActivity implements DefaultHardwa
     }
 
     private PreLoadReactDelegate createPreLoadReactDelegate() {
-        return new PreLoadReactDelegate(this,getMainComponentName());
+        return new PreLoadReactDelegate(this, getMainComponentName(),getBundleAssetName(), getLaunchOptions() ,getCustomProgressView());
     }
 
     /**
      * 子类重写，返回RN对应的界面组件名称
+     *
      * @return
      */
     protected @Nullable
     String getMainComponentName() {
+        return null;
+    }
+
+    /**
+     * 获取启动所需参数
+     *
+     * @return
+     */
+    protected @Nullable
+    Bundle getLaunchOptions() {
+        return null;
+    }
+
+    /**
+     * 获取启动所需参数BundleAssetName
+     *
+     * @return
+     */
+    protected @Nullable
+    String getBundleAssetName() {
+        return null;
+    }
+
+    /**
+     * 获取启动所需参数BundleAssetName
+     *
+     * @return
+     */
+    protected @Nullable
+    ICustomProgress  getCustomProgressView() {
         return null;
     }
 
@@ -62,14 +96,14 @@ public class PreLoadReactActivity extends ReactActivity implements DefaultHardwa
 
     @Override
     public void onNewIntent(Intent intent) {
-        if(!mPreLoadReactDelegate.onNewIntent(intent)) {
+        if (!mPreLoadReactDelegate.onNewIntent(intent)) {
             super.onNewIntent(intent);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mPreLoadReactDelegate.onActivityResult(requestCode,resultCode,data);
+        mPreLoadReactDelegate.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -79,25 +113,26 @@ public class PreLoadReactActivity extends ReactActivity implements DefaultHardwa
 
     /**
      * 处理权限授权
+     *
      * @param permissions
      * @param requestCode
      * @param listener
      */
     @Override
     public void requestPermissions(String[] permissions, int requestCode, PermissionListener listener) {
-        mPreLoadReactDelegate.requestPermissions(permissions,requestCode,listener);
+        mPreLoadReactDelegate.requestPermissions(permissions, requestCode, listener);
     }
 
     /**
      * 授权结果
+     *
      * @param requestCode
      * @param permissions
      * @param grantResults
      */
     @Override
     public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults) {
-       mPreLoadReactDelegate.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        mPreLoadReactDelegate.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-
 }
 

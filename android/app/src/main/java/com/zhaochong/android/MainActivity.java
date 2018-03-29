@@ -1,6 +1,5 @@
 package com.zhaochong.android;
 
-import android.app.Application;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,22 +12,21 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
-import com.facebook.react.ReactApplication;
-import com.facebook.react.bridge.ReactApplicationContext;
-import com.rnbridge.preloadreact.ReactNativePreLoader;
-import com.rnbridge.rnactivity.MyReactActivity;
+import com.kaopiz.kprogresshud.KProgressHUD;
 import com.rnbridge.RNBridgeManager;
 import com.rnbridge.constants.FileConstant;
+import com.rnbridge.constants.RNBridgeConstants;
 import com.rnbridge.hotupdate.HotUpdate;
-import com.facebook.react.ReactInstanceManager;
-import com.facebook.react.common.LifecycleState;
-import com.facebook.react.shell.MainReactPackage;
+import com.rnbridge.rnactivity.BaseReactActivity;
 
 public class MainActivity extends AppCompatActivity {
 
     private long mDownLoadId;
     private CompleteReceiver localReceiver;
+    private String token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwNTA0IiwiYXVkIjoiYnJvd3NlciIsImlhdCI6MTUyMDQyMjI2NiwibmJmIjoxNTIwNDIyMjY2LCJleHAiOjE1MjA0MjIyNzQxODMsImlzcyI6ImVjYXJ4IiwianRpIjoxNTIwNDIyMjY2LCJjbGllbnRJZCI6ImJyb3dzZXIiLCJ1aWQiOiIxMDAwNTA0IiwiYXBwSWQiOiJNODIwaWdpaTVsTDR0Y3kiLCJlbnYiOiJ0ZXN0aW5nIn0.2-Fx7Gv5MmFBUWChi2HaYvUijXMaFqj4x9F08CIno48";
     Bundle bundle = new Bundle();
+    KProgressHUD hud;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,16 +42,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        bundle.putString("accessToken","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwNTA0IiwiYXVkIjoiYnJvd3NlciIsImlhdCI6MTUyMDA2MjM3NiwibmJmIjoxNTIwMDYyMzc2LCJleHAiOjE1MjAwNjIzODM4NDEsImlzcyI6ImVjYXJ4IiwianRpIjoxNTIwMDYyMzc2LCJjbGllbnRJZCI6ImJyb3dzZXIiLCJ1aWQiOiIxMDAwNTA0IiwiYXBwSWQiOiJNODIwaWdpaTVsTDR0Y3kiLCJlbnYiOiJ0ZXN0aW5nIn0.NuBQV0i9Bl1IxVnBENDmEUXjdW8NIrGQ7NV5KYhy-qI");
+        bundle.putString("accessToken",token);
         bundle.putString("userId","15712893500");
         if (hasFocus) {
-            //FIXME 首先禁止预加载，防止内存过大
-          /*  RNBridgeManager.getInstance().preLoad(MainActivity.this,
+            //FIXME 首先禁止预加载，1.防止内存过大 2.加载过后无法点击
+         /* RNBridgeManager.getInstance().preLoad(MainActivity.this,
                     "RnBase",
                     "index.VPCenter.bundle",
                     ((ReactApplication)getApplication()).getReactNativeHost().getReactInstanceManager(),
-                    bundle);
-            RNBridgeManager.getInstance().preLoad(MainActivity.this,
+                   bundle);*/
+          /*     RNBridgeManager.getInstance().preLoad(MainActivity.this,
                     "RnBase",
                     "index.dataMall.bundle",
                     ((ReactApplication)getApplication()).getReactNativeHost().getReactInstanceManager(),
@@ -68,11 +66,11 @@ public class MainActivity extends AppCompatActivity {
      */
     public void sendMsgToRN(View v) {
         if (MainApplication.getReactPackage() != null) {
-            if (RNBridgeManager.getReactPackage().mModule == null) {
-                Toast.makeText(this, "mModule is " + RNBridgeManager.getReactPackage().mModule, Toast.LENGTH_SHORT).show();
+            if (MainApplication.getReactPackage().mModule == null) {
+                Toast.makeText(this, "mModule is " + MainApplication.getReactPackage().mModule, Toast.LENGTH_SHORT).show();
                 return;
             }
-            MainApplication.getReactPackage().mModule.nativeCallRn("hello");
+            MainApplication.getReactPackage().mModule.nativeCallRn(RNBridgeConstants.NATIVECALLRN_EVENT,"hello");
         }
     }
 
@@ -126,27 +124,30 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void toliuliang(View view) {
-        RNBridgeManager.bundleAssetName = "index.dataMall.bundle";
-        startActivity(new Intent(this, MyReactActivity.class));
+        RNBridgeManager
+                .getInstance()
+                .setLaunchOptions(bundle)
+                .setComponentName("RnBase")
+                .setBundleAssetName( "index.dataMall.bundle")
+                .startRNActivity(MainActivity.this);
        // RNBridgeManager.startRNActivity(MainActivity.this, "index.dataMall.bundle", "index.dataMall", "RnBase",null);
     }
 
     public void tovpcenter(View view) {
-        RNBridgeManager.startRNActivity(MainActivity.this, "RnBase", ReactInstanceManager.builder()
-                .setApplication(getApplication())
+
+        RNBridgeManager
+                .getInstance()
+                .setLaunchOptions(bundle)
+                .setComponentName("RnBase")
                 .setBundleAssetName("index.VPCenter.bundle")
-                .setJSMainModulePath("index.VPCenter")
-                .addPackage(new MainReactPackage())
-                .setUseDeveloperSupport(false)
-                .setInitialLifecycleState(LifecycleState.RESUMED)
-                .build(),
-                bundle
-                );
+                .setCustomProgressParams("加载中。。。。","测试中",KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setNativeContants("RNContants","我是Android常量，hello  RN")
+              //  .setRnPushlishMsgListener()
+                .startRNActivity(MainActivity.this);
     }
 
     public void torn(View view) {
-        RNBridgeManager.bundleAssetName = "index.VPCenter.bundle";
-        startActivity(new Intent(this, MyReactActivity.class));
+
     }
 
     public class CompleteReceiver extends BroadcastReceiver {

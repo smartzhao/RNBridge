@@ -34,7 +34,7 @@ public class ReactNativePreLoader {
      * @param componentName
      */
     public static void preLoad(Activity activity, ReactInstanceManager reactInstanceManager, String componentName, String bundleAssetName, @Nullable Bundle initialProperties) {
-        //TODO 通过资源bundle名称来区分缓存
+        //TODO 通过资源bundle名称来区分缓存,让所需要的bundle的comonentName进行自定义和一致性管理
         if (CACHE.get(bundleAssetName) != null) {
             return;
         }
@@ -52,21 +52,21 @@ public class ReactNativePreLoader {
     /**
      * 获取ReactRootView
      *
-     * @param componentName
+     * @param bundleAssetName
      * @return
      */
-    public static ReactRootView getReactRootView(String componentName) {
-        return CACHE.get(componentName);
+    public static ReactRootView getReactRootView(String bundleAssetName) {
+        return CACHE.get(bundleAssetName);
     }
 
     /**
      * 从当前界面移除 ReactRootView
      *
-     * @param component
+     * @param bundleAssetName
      */
-    public static void deatchView(String component) {
+    public static void deatchView(String bundleAssetName) {
         try {
-            ReactRootView rootView = getReactRootView(component);
+            ReactRootView rootView = getReactRootView(bundleAssetName);
             ViewGroup parent = (ViewGroup) rootView.getParent();
             if (parent != null) {
                 parent.removeView(rootView);

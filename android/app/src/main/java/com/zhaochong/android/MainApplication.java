@@ -5,22 +5,21 @@ import android.app.Application;
 import android.util.Log;
 
 import com.BV.LinearGradient.LinearGradientPackage;
+import com.facebook.react.ReactApplication;
+import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
-import com.rnbridge.*;
+import com.rnbridge.RNBridgeManager;
+import com.rnbridge.base.BaseReactNativeHost;
 import com.rnbridge.callback.Callback;
-import com.facebook.react.ReactApplication;
-import com.facebook.react.ReactNativeHost;
 import com.rnbridge.communication.CommPackage;
-import com.rnbridge.constants.FileConstant;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.annotation.Nullable;
+
 import static com.facebook.react.common.ReactConstants.TAG;
 
 /**
@@ -30,15 +29,17 @@ import static com.facebook.react.common.ReactConstants.TAG;
 public class MainApplication extends Application implements ReactApplication {
     static MainApplication instance;
     private static final CommPackage mCommPackage = new CommPackage();
-    private Map<String,ReactNativeHost> reactNativeHostMap = new HashMap<>();
+    private Map<String, ReactNativeHost> reactNativeHostMap = new HashMap<>();
 
     @Override
     public void onCreate() {
         super.onCreate();
-        instance =this;
-        reactNativeHostMap.put("index.VPCenter.bundle",mReactNativeHost);
-        reactNativeHostMap.put("index.dataMall.bundle",mReactNativeHost1);
-        RNBridgeManager.getInstance().init(this,reactNativeHostMap, new Callback() {
+        instance = this;
+        RNBridgeManager.getInstance().setBundleAssetName("index.VPCenter.bundle");
+        reactNativeHostMap.put("index.VPCenter.bundle", getBaseReactNativeHost(this));
+        RNBridgeManager.getInstance().setBundleAssetName("index.dataMall.bundle");
+        reactNativeHostMap.put("index.dataMall.bundle", getBaseReactNativeHost(this));
+        RNBridgeManager.getInstance().init(this, reactNativeHostMap, new Callback() {
             @Override
             public void onResult(Object o) {
                 Log.d(TAG, ">>>>>onResult: " + o);
@@ -55,85 +56,11 @@ public class MainApplication extends Application implements ReactApplication {
             }
         });
     }
-    public  final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
 
-        @Nullable
-        @Override
-        protected String getJSBundleFile() {
-            File file = new File(FileConstant.JS_BUNDLE_LOCAL_PATH);
-            Log.d(TAG, ">>>> file: "  +  file.getAbsolutePath());
-            if (file != null && file.exists()) {
-                return FileConstant.JS_BUNDLE_LOCAL_PATH;
-            } else {
-                return super.getJSBundleFile();
-            }
-        }
-        @Nullable
-        @Override
-        protected String getBundleAssetName() {
-            Log.d(TAG, ">>>> BundleAssetName: "  + RNBridgeManager.bundleAssetName);
-            return "index.VPCenter.bundle";
-        }
-
-        @Override
-        public boolean getUseDeveloperSupport() {
-            return com.rnbridge.BuildConfig.DEBUG;
-        }
-
-        @Override
-        protected List<ReactPackage> getPackages() {
-            Log.d(TAG, ">>>> mCommPackage: "  +  mCommPackage.mModule);
-            return Arrays.<ReactPackage>asList(
-                    new MainReactPackage(),
-                    new VectorIconsPackage(),
-                    new LinearGradientPackage(), // <---- and This!
-                    mCommPackage
-
-            );
-        }
-    };
-    public  final ReactNativeHost mReactNativeHost1 = new ReactNativeHost(this) {
-
-        @Nullable
-        @Override
-        protected String getJSBundleFile() {
-            File file = new File(FileConstant.JS_BUNDLE_LOCAL_PATH);
-            Log.d(TAG, ">>>> file: "  +  file.getAbsolutePath());
-            if (file != null && file.exists()) {
-                return FileConstant.JS_BUNDLE_LOCAL_PATH;
-            } else {
-                return super.getJSBundleFile();
-            }
-        }
-        @Nullable
-        @Override
-        protected String getBundleAssetName() {
-            Log.d(TAG, ">>>> BundleAssetName: "  + RNBridgeManager.bundleAssetName);
-            return "index.dataMall.bundle";
-        }
-
-        @Override
-        public boolean getUseDeveloperSupport() {
-            return com.rnbridge.BuildConfig.DEBUG;
-        }
-
-        @Override
-        protected List<ReactPackage> getPackages() {
-            Log.d(TAG, ">>>> mCommPackage: "  +  mCommPackage.mModule);
-            return Arrays.<ReactPackage>asList(
-                    new MainReactPackage(),
-                    new VectorIconsPackage(),
-                    new LinearGradientPackage(), // <---- and This!
-                    mCommPackage
-
-            );
-        }
-    };
     @Override
     public ReactNativeHost getReactNativeHost() {
-        Log.d(TAG, ">>>>getReactNativeHost: "  + mReactNativeHost.hasInstance());
-        Log.d(TAG, ">>>>getReactNativeHost: "  + RNBridgeManager.bundleAssetName);
-        return reactNativeHostMap.get(RNBridgeManager.bundleAssetName);
+        Log.d(TAG, ">>>>getReactNativeHost: " + RNBridgeManager.getInstance().getBundleAssetName());
+        return reactNativeHostMap.get(RNBridgeManager.getInstance().getBundleAssetName());
     }
 
     /**
@@ -147,5 +74,33 @@ public class MainApplication extends Application implements ReactApplication {
 
     public static MainApplication getInstance() {
         return instance;
+    }
+
+    public ReactNativeHost getBaseReactNativeHost(Application application) {
+        return new BaseReactNativeHost(application) {
+            // 本地SD卡加载路径可自定义
+            @Override
+            protected String getJSBundleFile() {
+                return super.getJSBundleFile();
+            }
+
+
+            @Override
+            public boolean getUseDeveloperSupport() {
+                return com.rnbridge.BuildConfig.DEBUG;
+            }
+
+            @Override
+            protected List<ReactPackage> getPackages() {
+                Log.d(TAG, ">>>> mCommPackage: " + mCommPackage.mModule);
+                return Arrays.<ReactPackage>asList(
+                        new MainReactPackage(),
+                        new VectorIconsPackage(),
+                        new LinearGradientPackage(), // <---- and This!
+                        mCommPackage
+
+                );
+            }
+        };
     }
 }

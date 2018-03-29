@@ -15,7 +15,7 @@ public class FileConstant {
     /**
      * zip的文件名
      */
-    public static final String ZIP_NAME = "wan";
+    public static final String ZIP_NAME = "zhaochong";
 
     /**
      * bundle文件名

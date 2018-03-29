@@ -5,9 +5,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.provider.Settings;
 import android.view.KeyEvent;
+import android.widget.Toast;
 
+import com.kaopiz.kprogresshud.KProgressHUD;
 import com.rnbridge.RNBridgeManager;
 import com.facebook.infer.annotation.Assertions;
 import com.facebook.react.ReactInstanceManager;
@@ -17,6 +20,7 @@ import com.facebook.react.bridge.Callback;
 import com.facebook.react.devsupport.DoubleTapReloadRecognizer;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.modules.core.PermissionListener;
+import com.rnbridge.callback.ICustomProgress;
 
 import javax.annotation.Nullable;
 
@@ -31,13 +35,19 @@ public class PreLoadReactDelegate {
     private ReactRootView mReactRootView;
     private Callback mPermissionsCallback;
     private final String mMainComponentName;
+    private  Bundle initialProperties;
+    private  String bundleAssetName;
     private PermissionListener mPermissionListener;
     private final int REQUEST_OVERLAY_PERMISSION_CODE = 1111;
     private DoubleTapReloadRecognizer mDoubleTapReloadRecognizer;
+    private ICustomProgress iCustomProgress;
 
-    public PreLoadReactDelegate(Activity activity, @Nullable String mainComponentName) {
+    public PreLoadReactDelegate(Activity activity, @Nullable String mainComponentName,@Nullable String bundleAssetName,@Nullable Bundle initialProperties,@Nullable ICustomProgress iCustomProgress) {
         this.mActivity = activity;
         this.mMainComponentName = mainComponentName;
+        this.initialProperties = initialProperties;
+        this.bundleAssetName = bundleAssetName;
+        this.iCustomProgress = iCustomProgress;
     }
 
     public void onCreate() {
@@ -51,9 +61,9 @@ public class PreLoadReactDelegate {
             }
         }
 
-        if (mMainComponentName != null && !needsOverlayPermission) {
+        if (bundleAssetName != null && !needsOverlayPermission) {
             // 1.从缓存中获取RootView
-            mReactRootView = ReactNativePreLoader.getReactRootView(mMainComponentName);
+            mReactRootView = ReactNativePreLoader.getReactRootView(bundleAssetName);
 
             if(mReactRootView == null) {
 
@@ -62,13 +72,16 @@ public class PreLoadReactDelegate {
                 mReactRootView.startReactApplication(
                         getReactInstanceManager(),
                         mMainComponentName,
-                        null);
+                        initialProperties);
             }
             // 3.将RootView设置到Activity布局
             mActivity.setContentView(mReactRootView);
         }
 
         mDoubleTapReloadRecognizer = new DoubleTapReloadRecognizer();
+       // RNBridgeManager.getInstance().createProgress(mActivity);
+        iCustomProgress.getActivity(mActivity);
+        this.iCustomProgress.show();
     }
 
     public void onResume() {
@@ -98,7 +111,7 @@ public class PreLoadReactDelegate {
         }
 
         // 清除View
-        ReactNativePreLoader.deatchView(mMainComponentName);
+        ReactNativePreLoader.deatchView(bundleAssetName);
     }
 
     public boolean onNewIntent(Intent intent) {
@@ -188,4 +201,5 @@ public class PreLoadReactDelegate {
     private ReactInstanceManager getReactInstanceManager() {
         return getReactNativeHost().getReactInstanceManager();
     }
+
 }

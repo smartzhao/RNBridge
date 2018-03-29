@@ -17,7 +17,7 @@
         android:allowBackup="true"
         android:supportsRtl="true">
         <activity
-            android:name=".rnactivity.MyReactActivity"
+            android:name=".rnactivity.BaseReactActivity"
             android:label="@string/app_name" />
         <activity android:name=".rnactivity.RNActivity" />
         <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />

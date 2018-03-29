@@ -1,25 +1,23 @@
 package com.rnbridge.communication;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.facebook.react.bridge.JSApplicationIllegalArgumentException;
-import com.rnbridge.utils.PermissionUtils;
+import com.rnbridge.RNBridgeManager;
+import com.rnbridge.callback.RNPushlishMsgListener;
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.rnbridge.constants.RNBridgeConstants;
 
 import java.util.HashMap;
 import java.util.Map;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * 通信Module类
@@ -28,9 +26,8 @@ import static android.content.ContentValues.TAG;
 public class CommModule extends ReactContextBaseJavaModule {
 
     private ReactApplicationContext mContext;
-    public static final String MODULE_NAME = "commModule";
-    public static final String EVENT_NAME = "nativeCallRn";
-    public static final String EVENT_NAME1 = "getPatchImgs";
+    private RNPushlishMsgListener rnPushlishMsgListener = RNBridgeManager.getInstance().getRnPushlishMsgListener();
+
 
     /**
      * 构造方法必须实现
@@ -49,69 +46,53 @@ public class CommModule extends ReactContextBaseJavaModule {
      */
     @Override
     public String getName() {
-        return MODULE_NAME;
+        return RNBridgeConstants.MODULE_NAME;
     }
 
     /**
      * RN调用Native的方法
+     * <p>
+     * 执行本地方法，不进行参数返回。根据action进行判断
+     * 方法不能重载
      *
-     * @param phone
+     * @param action
      */
+
     @ReactMethod
-    public void rnCallNative(String phone) {
-        Toast.makeText(mContext, phone, Toast.LENGTH_SHORT).show();
-        PermissionUtils.requestPermissins(mContext, Manifest.permission.SYSTEM_ALERT_WINDOW);
-        Log.d(TAG, "111111rnCallNative: " + phone);
+    public void rnCallNativeAction(String action) {
+
+        RNBridgeManager.getInstance().rnCallNativeAction(action, null,mContext);
     }
 
 
     /**
-     * 从JS页面跳转到原生activity 同时也可以从JS传递相关数据到原生
+     * RN调用Native的方法
      *
-     * @param name   需要打开的Activity的class
-     * @param params
+     * @param action 执行事件
+     * @param params 事件参数
      */
     @ReactMethod
-    public void startActivityFromJS(String name, String params) {
-        try {
-            Activity currentActivity = getCurrentActivity();
-            if (null != currentActivity && null != name) {
-                Class toActivity = Class.forName(name);
-                Intent intent = new Intent(currentActivity, toActivity);
-                intent.putExtra("params", params);
-                currentActivity.startActivity(intent);
-            }
-        } catch (Exception e) {
-            throw new JSApplicationIllegalArgumentException(
-                    "不能打开Activity : " + e.getMessage());
-        }
-    }
+    public void rnCallNativeaAddParams(String action, String params) {
 
-    /**
-     * 关闭ReactNative
-     */
-    @ReactMethod
-    public void colseReactNative() {
-        try {
-            Activity currentActivity = getCurrentActivity();
-            if (null != currentActivity) {
-                currentActivity.finish();
-            }
-        } catch (Exception e) {
-            throw new JSApplicationIllegalArgumentException(
-                    "colseReactNative : " + e.getMessage());
-        }
+        RNBridgeManager.getInstance().rnCallNativeAction(action, params,mContext);
     }
 
     /**
      * Native调用RN
      *
-     * @param msg
+     * @param eventName
+     * @param data
      */
-    public void nativeCallRn(String msg) {
+    public void nativeCallRn(String eventName, @javax.annotation.Nullable Object data) {
         mContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class)
-                .emit(EVENT_NAME, msg);
+                .emit(eventName, data);
     }
+
+
+    /**
+     * 下面是React Native主动调用方法获取
+     */
+
 
     /**
      * Callback 方式
@@ -122,9 +103,12 @@ public class CommModule extends ReactContextBaseJavaModule {
      */
     @ReactMethod
     public void rnCallNativeFromCallback(String msg, Callback callback) {
-
+        Log.d("---Callback", "test" + msg);
         // 1.处理业务逻辑...
-        String result = "处理结果：" + msg;
+        String result = null;
+        if (rnPushlishMsgListener != null) {
+            result = rnPushlishMsgListener.rnCallNativeFromCallback(msg);
+        }
         // 2.回调RN,即将处理结果返回给RN
         callback.invoke(result);
     }
@@ -138,9 +122,12 @@ public class CommModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void rnCallNativeFromPromise(String msg, Promise promise) {
 
-        Log.e("---", "adasdasda");
+        Log.d("---promise", "test" + msg);
         // 1.处理业务逻辑...
-        String result = "处理结果：" + msg;
+        String result = null;
+        if (rnPushlishMsgListener != null) {
+            result = rnPushlishMsgListener.rnCallNativeFromPromise(msg);
+        }
         // 2.回调RN,即将处理结果返回给RN
         promise.resolve(result);
     }
@@ -152,7 +139,8 @@ public class CommModule extends ReactContextBaseJavaModule {
     @Override
     public Map<String, Object> getConstants() {
         Map<String, Object> params = new HashMap<>();
-        params.put("Constant", "我是常量，传递给RN");
+        params.putAll(RNBridgeManager.getInstance().getNativeContantMap());
+        Log.d("---params", "test");
         return params;
     }
 }

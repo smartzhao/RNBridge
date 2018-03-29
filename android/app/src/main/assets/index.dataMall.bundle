@@ -56217,7 +56217,7 @@ var native = function () {
                 _reactNative.NativeModules.RNBridge.popBackNative();
             } else {
                 console.log('返回android原生页面222');
-                _reactNative.NativeModules.commModule.startActivityFromJS("com.zhaochong.android.MainActivity", "我是从JS传过来的参数信息.");
+                _reactNative.NativeModules.commModule.rnCallNativeAction('colse_reactnative');
             }
             return 'info';
         }
@@ -56230,9 +56230,20 @@ var native = function () {
                 _reactNative.NativeModules.RNBridge.pushNativeView(params);
             } else {
                 console.log('跳到android原生页面');
-                _reactNative.NativeModules.commModule.startActivityFromJS("com.zhaochong.android.MainActivity", "我是从JS传过来的参数信息.");
+                _reactNative.NativeModules.commModule.rnCallNativeAction('colse_reactnative');
             }
             return 'info';
+        }
+    }, {
+        key: 'colseHUD',
+        value: function colseHUD() {
+            if (_util2.default._isIos()) {
+                console.log('返回ios原生页面');
+                _reactNative.NativeModules.RNBridge.popBackNative();
+            } else {
+                console.log('返关闭预加载界面');
+                _reactNative.NativeModules.commModule.rnCallNativeAction('dissmiss_progresshud');
+            }
         }
     }]);
     return native;
@@ -56661,15 +56672,12 @@ var DataMall = function (_Component) {
 
         _this.onBackAndroid = function () {
             var routers = _this.props.routes;
+            console.log('----routers----', routers);
             if (routers.length > 1) {
                 _this.props.navigation.dispatch(_reactNavigation.NavigationActions.back());
                 return true;
             } else {
-                if (_this.lastBackPressed && _this.lastBackPressed + 2000 >= Date.now()) {
-                    return false;
-                }
-                _this.lastBackPressed = Date.now();
-
+                _native2.default.goBackNative();
                 return true;
             }
         };
@@ -56686,52 +56694,35 @@ var DataMall = function (_Component) {
                         _this._toDetail(item);
                     }, __source: {
                         fileName: _jsxFileName,
-                        lineNumber: 102
+                        lineNumber: 105
                     }
                 },
                 _react2.default.createElement(
                     _reactNative.View,
                     { style: [_DataMall2.default.goodsItem1, { marginLeft: margin }], __source: {
                             fileName: _jsxFileName,
-                            lineNumber: 103
+                            lineNumber: 106
                         }
                     },
                     _react2.default.createElement(
                         _reactNative.View,
                         { style: _DataMall2.default.goodsItem2, __source: {
                                 fileName: _jsxFileName,
-                                lineNumber: 104
+                                lineNumber: 107
                             }
                         },
                         _react2.default.createElement(_reactNative.Image, { style: _DataMall2.default.goodsImage, resizeMode: 'stretch', source: { uri: item.image }, __source: {
                                 fileName: _jsxFileName,
-                                lineNumber: 105
+                                lineNumber: 108
                             }
                         }),
                         _react2.default.createElement(
                             _reactNative.View,
                             { style: _DataMall2.default.goodsInfo, __source: {
                                     fileName: _jsxFileName,
-                                    lineNumber: 106
+                                    lineNumber: 109
                                 }
                             },
-                            _react2.default.createElement(
-                                _reactNative.View,
-                                { style: _DataMall2.default.InfoView, __source: {
-                                        fileName: _jsxFileName,
-                                        lineNumber: 107
-                                    }
-                                },
-                                _react2.default.createElement(
-                                    _reactNative.Text,
-                                    { style: _DataMall2.default.nameText, numberOfLines: 1, __source: {
-                                            fileName: _jsxFileName,
-                                            lineNumber: 108
-                                        }
-                                    },
-                                    item.name
-                                )
-                            ),
                             _react2.default.createElement(
                                 _reactNative.View,
                                 { style: _DataMall2.default.InfoView, __source: {
@@ -56741,12 +56732,12 @@ var DataMall = function (_Component) {
                                 },
                                 _react2.default.createElement(
                                     _reactNative.Text,
-                                    { style: _DataMall2.default.infoText, numberOfLines: 1, __source: {
+                                    { style: _DataMall2.default.nameText, numberOfLines: 1, __source: {
                                             fileName: _jsxFileName,
                                             lineNumber: 111
                                         }
                                     },
-                                    item.infoDescription
+                                    item.name
                                 )
                             ),
                             _react2.default.createElement(
@@ -56758,9 +56749,26 @@ var DataMall = function (_Component) {
                                 },
                                 _react2.default.createElement(
                                     _reactNative.Text,
-                                    { style: _DataMall2.default.priceText, numberOfLines: 1, __source: {
+                                    { style: _DataMall2.default.infoText, numberOfLines: 1, __source: {
                                             fileName: _jsxFileName,
                                             lineNumber: 114
+                                        }
+                                    },
+                                    item.infoDescription
+                                )
+                            ),
+                            _react2.default.createElement(
+                                _reactNative.View,
+                                { style: _DataMall2.default.InfoView, __source: {
+                                        fileName: _jsxFileName,
+                                        lineNumber: 116
+                                    }
+                                },
+                                _react2.default.createElement(
+                                    _reactNative.Text,
+                                    { style: _DataMall2.default.priceText, numberOfLines: 1, __source: {
+                                            fileName: _jsxFileName,
+                                            lineNumber: 117
                                         }
                                     },
                                     item.price
@@ -56779,7 +56787,7 @@ var DataMall = function (_Component) {
         _this._separator = function () {
             return _react2.default.createElement(_reactNative.View, { style: { height: 10 }, __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 134
+                    lineNumber: 137
                 }
             });
         };
@@ -56822,13 +56830,13 @@ var DataMall = function (_Component) {
                 return _react2.default.createElement(_LoadingLoadMore2.default, {
                     __source: {
                         fileName: _jsxFileName,
-                        lineNumber: 178
+                        lineNumber: 181
                     }
                 });
             } else {
                 return _react2.default.createElement(_LoadingLoadMore2.default, { LoadMoreText: '~\u6211\u662F\u6709\u5E95\u7EBF\u7684~', __source: {
                         fileName: _jsxFileName,
-                        lineNumber: 180
+                        lineNumber: 183
                     }
                 });
             }
@@ -56841,21 +56849,21 @@ var DataMall = function (_Component) {
                 _reactNative.View,
                 { style: { height: 212 }, __source: {
                         fileName: _jsxFileName,
-                        lineNumber: 186
+                        lineNumber: 189
                     }
                 },
                 _react2.default.createElement(
                     _reactNative.View,
                     { style: _DataMall2.default.mallTitle, __source: {
                             fileName: _jsxFileName,
-                            lineNumber: 187
+                            lineNumber: 190
                         }
                     },
                     _react2.default.createElement(
                         _reactNative.Text,
                         { style: _DataMall2.default.titleText, __source: {
                                 fileName: _jsxFileName,
-                                lineNumber: 188
+                                lineNumber: 191
                             }
                         },
                         '\u6D41\u91CF\u5546\u57CE'
@@ -56870,18 +56878,18 @@ var DataMall = function (_Component) {
                         showsPagination: true,
                         dot: _react2.default.createElement(_reactNative.View, { style: _DataMall2.default.customDot, __source: {
                                 fileName: _jsxFileName,
-                                lineNumber: 195
+                                lineNumber: 198
                             }
                         }),
                         activeDot: _react2.default.createElement(_reactNative.View, { style: _DataMall2.default.customActiveDot, __source: {
                                 fileName: _jsxFileName,
-                                lineNumber: 196
+                                lineNumber: 199
                             }
                         }),
                         paginationStyle: { bottom: 10, justifyContent: 'flex-end', paddingRight: 25 },
                         autoplayTimeout: 4, __source: {
                             fileName: _jsxFileName,
-                            lineNumber: 190
+                            lineNumber: 193
                         }
                     },
                     _this.props.dataMallData.bannerList.map(function (item, index) {
@@ -56889,7 +56897,7 @@ var DataMall = function (_Component) {
                             _reactNative.View,
                             { style: _DataMall2.default.banner, key: index, __source: {
                                     fileName: _jsxFileName,
-                                    lineNumber: 202
+                                    lineNumber: 205
                                 }
                             },
                             _react2.default.createElement(_reactNative.Image, {
@@ -56898,7 +56906,7 @@ var DataMall = function (_Component) {
                                 source: { uri: item.image },
                                 __source: {
                                     fileName: _jsxFileName,
-                                    lineNumber: 203
+                                    lineNumber: 206
                                 }
                             })
                         );
@@ -56906,7 +56914,7 @@ var DataMall = function (_Component) {
                 ),
                 _react2.default.createElement(_reactNative.View, { style: { height: 10 }, __source: {
                         fileName: _jsxFileName,
-                        lineNumber: 213
+                        lineNumber: 216
                     }
                 })
             );
@@ -56923,11 +56931,12 @@ var DataMall = function (_Component) {
     }
 
     babelHelpers.createClass(DataMall, [{
-        key: 'componentDidMount',
-        value: function componentDidMount() {
+        key: 'componentWillMount',
+        value: function componentWillMount() {
             this.props.navigation.setParams({
                 goOrderList: this._toOrderList
             });
+            _native2.default.colseHUD();
             if (_reactNative.Platform.OS === 'android') {
                 _reactNative.BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
             }
@@ -56959,7 +56968,7 @@ var DataMall = function (_Component) {
                 return _react2.default.createElement(_LoadingView2.default, {
                     __source: {
                         fileName: _jsxFileName,
-                        lineNumber: 220
+                        lineNumber: 223
                     }
                 });
             } else {
@@ -56967,7 +56976,7 @@ var DataMall = function (_Component) {
                     _reactNative.View,
                     { style: _DataMall2.default.container, __source: {
                             fileName: _jsxFileName,
-                            lineNumber: 223
+                            lineNumber: 226
                         }
                     },
                     _react2.default.createElement(_reactNative.FlatList, {
@@ -56989,7 +56998,7 @@ var DataMall = function (_Component) {
                         ListFooterComponent: this._ListFooterComponent,
                         __source: {
                             fileName: _jsxFileName,
-                            lineNumber: 226
+                            lineNumber: 229
                         }
                     })
                 );
@@ -57048,10 +57057,12 @@ DataMall.navigationOptions = function (_ref2) {
 };
 
 function mapStateToProps(state) {
-    var dataMallData = state.dataMallData;
+    var dataMallData = state.dataMallData,
+        nav = state.nav;
 
     return {
-        dataMallData: dataMallData
+        dataMallData: dataMallData,
+        routes: nav.routes
     };
 }
 
@@ -62844,6 +62855,9 @@ var _class = function (_Component) {
     }, _this.updateIndex = function (offset, dir, cb) {
       var state = _this.state;
       var index = state.index;
+      if (offset === undefined || _this.internals.offset === undefined) {
+        return;
+      }
       var diff = offset[dir] - _this.internals.offset[dir];
       var step = dir === 'x' ? state.width : state.height;
       var loopJump = false;
@@ -62946,7 +62960,7 @@ var _class = function (_Component) {
           marginBottom: 3
         }, _this.props.activeDotStyle], __source: {
           fileName: _jsxFileName,
-          lineNumber: 527
+          lineNumber: 528
         }
       });
       var Dot = _this.props.dot || _react2.default.createElement(_reactNative.View, { style: [{
@@ -62960,7 +62974,7 @@ var _class = function (_Component) {
           marginBottom: 3
         }, _this.props.dotStyle], __source: {
           fileName: _jsxFileName,
-          lineNumber: 537
+          lineNumber: 538
         }
       });
       for (var i = 0; i < _this.state.total; i++) {
@@ -62971,7 +62985,7 @@ var _class = function (_Component) {
         _reactNative.View,
         { pointerEvents: 'none', style: [styles['pagination_' + _this.state.dir], _this.props.paginationStyle], __source: {
             fileName: _jsxFileName,
-            lineNumber: 555
+            lineNumber: 556
           }
         },
         dots
@@ -62983,7 +62997,7 @@ var _class = function (_Component) {
         _reactNative.View,
         { style: styles.title, __source: {
             fileName: _jsxFileName,
-            lineNumber: 565
+            lineNumber: 566
           }
         },
         _this.props.children[_this.state.index].props.title
@@ -62996,7 +63010,7 @@ var _class = function (_Component) {
           _reactNative.Text,
           { style: styles.buttonText, __source: {
               fileName: _jsxFileName,
-              lineNumber: 576
+              lineNumber: 577
             }
           },
           '\u203A'
@@ -63012,7 +63026,7 @@ var _class = function (_Component) {
           disabled: _this.props.disableNextButton,
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 580
+            lineNumber: 581
           }
         },
         _react2.default.createElement(
@@ -63020,7 +63034,7 @@ var _class = function (_Component) {
           {
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 584
+              lineNumber: 585
             }
           },
           button
@@ -63034,7 +63048,7 @@ var _class = function (_Component) {
           _reactNative.Text,
           { style: styles.buttonText, __source: {
               fileName: _jsxFileName,
-              lineNumber: 595
+              lineNumber: 596
             }
           },
           '\u2039'
@@ -63047,7 +63061,7 @@ var _class = function (_Component) {
             return button !== null && _this.scrollBy(-1);
           }, __source: {
             fileName: _jsxFileName,
-            lineNumber: 599
+            lineNumber: 600
           }
         },
         _react2.default.createElement(
@@ -63055,7 +63069,7 @@ var _class = function (_Component) {
           {
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 600
+              lineNumber: 601
             }
           },
           button
@@ -63069,7 +63083,7 @@ var _class = function (_Component) {
             height: _this.state.height
           }, _this.props.buttonWrapperStyle], __source: {
             fileName: _jsxFileName,
-            lineNumber: 609
+            lineNumber: 610
           }
         },
         _this.renderPrevButton(),
@@ -63090,7 +63104,7 @@ var _class = function (_Component) {
             onScrollEndDrag: _this.onScrollEndDrag,
             style: _this.props.scrollViewStyle, __source: {
               fileName: _jsxFileName,
-              lineNumber: 626
+              lineNumber: 627
             }
           }),
           pages
@@ -63105,7 +63119,7 @@ var _class = function (_Component) {
           key: pages.length,
           style: [styles.wrapperAndroid, _this.props.style], __source: {
             fileName: _jsxFileName,
-            lineNumber: 640
+            lineNumber: 641
           }
         }),
         pages
@@ -63237,7 +63251,7 @@ var _class = function (_Component) {
                 _reactNative.View,
                 { style: pageStyle, key: i, __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 702
+                    lineNumber: 703
                   }
                 },
                 children[page]
@@ -63247,13 +63261,13 @@ var _class = function (_Component) {
                 _reactNative.View,
                 { style: pageStyleLoading, key: i, __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 705
+                    lineNumber: 706
                   }
                 },
                 loadMinimalLoader ? loadMinimalLoader : _react2.default.createElement(_reactNative.ActivityIndicator, {
                   __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 706
+                    lineNumber: 707
                   }
                 })
               );
@@ -63263,7 +63277,7 @@ var _class = function (_Component) {
               _reactNative.View,
               { style: pageStyle, key: i, __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 711
+                  lineNumber: 712
                 }
               },
               children[page]
@@ -63275,7 +63289,7 @@ var _class = function (_Component) {
           _reactNative.View,
           { style: pageStyle, key: 0, __source: {
               fileName: _jsxFileName,
-              lineNumber: 715
+              lineNumber: 716
             }
           },
           children
@@ -63286,7 +63300,7 @@ var _class = function (_Component) {
         _reactNative.View,
         { style: [styles.container, containerStyle], onLayout: this.onLayout, __source: {
             fileName: _jsxFileName,
-            lineNumber: 719
+            lineNumber: 720
           }
         },
         this.renderScrollView(pages),
@@ -65777,7 +65791,7 @@ var PurchaseResult = function (_Component) {
         };
 
         _this.state = {
-            result: '1'
+            result: '2'
         };
         return _this;
     }
@@ -66048,7 +66062,9 @@ var PurchaseResult = function (_Component) {
                                 },
                                 _react2.default.createElement(
                                     _reactNative.TouchableOpacity,
-                                    { style: _PurchaseResult2.default.blueBtn, onPress: function onPress() {}, __source: {
+                                    { style: _PurchaseResult2.default.blueBtn, onPress: function onPress() {
+                                            _this2._payment();
+                                        }, __source: {
                                             fileName: _jsxFileName,
                                             lineNumber: 156
                                         }
@@ -66991,7 +67007,7 @@ var OrderDetail = function (_Component) {
                     }
                 });
             }
-            console.log('this.props.orderData.orderDetail', _this.props.orderData.orderDetail);
+
             return _react2.default.createElement(
                 _reactNative.View,
                 { style: _OrderDetail2.default.goodsInfo, __source: {
@@ -67216,7 +67232,6 @@ var OrderDetail = function (_Component) {
 
             var orderDetail = this.props.orderData.orderDetail;
 
-            console.log('this.props.navigation.state.params', this.props.navigation.state.params.detail);
             return _react2.default.createElement(
                 _reactNative.View,
                 { style: _OrderDetail2.default.container, __source: {
@@ -67592,6 +67607,10 @@ var _dataMallActionType = require(599                              ); // 599 = .
 
 var types = babelHelpers.interopRequireWildcard(_dataMallActionType);
 
+var _native = require(436              ); // 436 = ../utils/native
+
+var _native2 = babelHelpers.interopRequireDefault(_native);
+
 var initialState = {
     goodsList: [],
     bannerList: [],
@@ -67617,6 +67636,20 @@ function dataMallData() {
         case types.DATAMALL_GOODSDETAIL:
             return babelHelpers.extends({}, state, { goodDetail: action.data, loading: false });
         case types.DATAMALL_ORDERDETAIL:
+            console.log('-----订单详情-----', action.data);
+            var orderInfo = {
+                "Version": "2.1.0",
+                "PayChannelList": "ppi|wx-bc|ali-bc|wallet-yl",
+                "MerchantNo": "502040000089",
+                "MerchantOrderNo": "50629135.PROF",
+                "Amount": action.data.price,
+                "TransDatetime": "20180305173737",
+                "OrderNo": action.data.orderNum,
+                "Description": action.data.description,
+                "SdkExtData": { "geelyUserId": "001221", "walletUserId": "10234" },
+                "MerName": "湖北亿咖通科技有限公司(代理商-插件)",
+                "Sign": "6498B28FCF5E23DDA7ED3A39D41778E1" };
+            _native2.default.pushToNative(orderInfo);
             return babelHelpers.extends({}, state, { orderDetail: action.data });
         default:
             return state;
@@ -67671,6 +67704,7 @@ var types = babelHelpers.interopRequireWildcard(_commonDataActionType);
 
 var initialState = {
     authInfo: {},
+    carInfo: {},
     Authorization: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwMDgwIiwiYXVkIjoiYnJvd3NlciIsImlhdCI6MTUxNDI3NTE0MSwibmJmIjoxNTE0Mjc1MTQxLCJleHAiOjE1MjIwNTExNDEsImlzcyI6ImVjYXJ4IiwianRpIjoxNTE0Mjc1MTQxLCJjbGllbnRJZCI6ImJyb3dzZXIiLCJ1aWQiOiIxMDAwMDgwIiwiZW52IjoidGVzdGluZyJ9.XxKP0LqTLa1tUeoCu7TNipr01W_KaK_AXtCutrSri-o'
 };
 
@@ -67685,6 +67719,9 @@ function commonData() {
         case types.AUTH_INFO:
             console.log('AUTH_INFO', action.data);
             return babelHelpers.extends({}, state, { authInfo: action.data });
+        case types.CAR_INFO:
+            console.log('CAR_INFO', action.data);
+            return babelHelpers.extends({}, state, { carInfo: action.data });
 
         default:
             return state;
@@ -67694,7 +67731,7 @@ function commonData() {
 __d(/* reactNativeTest/rn/dataMall/constants/commonDataActionType.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var AUTH_INFO = exports.AUTH_INFO = "AUTH_INFO";
+var AUTH_INFO = exports.AUTH_INFO = "AUTH_INFO";var CAR_INFO = exports.CAR_INFO = "CAR_INFO";
 }, 651, null, "reactNativeTest/rn/dataMall/constants/commonDataActionType.js");
 __d(/* redux-thunk/lib/index.js */function(global, require, module, exports) {'use strict';
 
@@ -68049,9 +68086,11 @@ var AppWithNavigationState = function (_Component) {
         value: function componentWillMount() {
             var author = {
                 Authorization: this.props.params.accessToken,
-                uId: this.props.params.userId
-            };
+                uId: this.props.params.userId,
+                XAPPID: this.props.params.XAPPID };
+            var carInfo = this.props.params.carInfo;
             this.props.dispatch({ type: 'AUTH_INFO', data: author });
+            this.props.dispatch({ type: 'CAR_INFO', data: carInfo });
         }
     }, {
         key: 'componentWillUnmount',
@@ -68072,7 +68111,7 @@ var AppWithNavigationState = function (_Component) {
                 }),
                 __source: {
                     fileName: _jsxFileName,
-                    lineNumber: 46
+                    lineNumber: 49
                 }
             });
         }

@@ -39,8 +39,8 @@ import java.util.concurrent.atomic.AtomicLong;
 /********************使用例子********************/
 /*
 支持对象、数组、json、字符串（对象要序列化Serializable）
-ACache.get(AppApplication.getAppContext()).put(AppConstant.CHANNEL_MINE,mineChannelTableList);
-ACache.get(AppApplication.getAppContext()).get(AppConstant.CHANNEL_MINE);
+ACache.get(AppApplication.getAppContext()).put(RNBridgeConstants.CHANNEL_MINE,mineChannelTableList);
+ACache.get(AppApplication.getAppContext()).get(RNBridgeConstants.CHANNEL_MINE);
 */
 public class ACache {
 

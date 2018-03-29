@@ -2,7 +2,7 @@ package com.rnbridge.hotupdate;
 
 import android.content.Context;
 
-import com.rnbridge.constants.AppConstant;
+import com.rnbridge.constants.RNBridgeConstants;
 import com.rnbridge.constants.FileConstant;
 
 import java.io.File;
@@ -25,9 +25,9 @@ public class HotUpdate {
         // 1.下载前检查SD卡是否存在更新包文件夹,FIRST_UPDATE来标识是否为第一次下发更新包
         File bundleFile = new File(filePath);
         if(bundleFile != null && bundleFile.exists()) {
-            ACache.get(context).put(AppConstant.FIRST_UPDATE,false);
+            ACache.get(context).put(RNBridgeConstants.FIRST_UPDATE,false);
         } else {
-            ACache.get(context).put(AppConstant.FIRST_UPDATE,true);
+            ACache.get(context).put(RNBridgeConstants.FIRST_UPDATE,true);
         }
     }
 
@@ -37,7 +37,7 @@ public class HotUpdate {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                boolean result = (Boolean) ACache.get(context).getAsObject(AppConstant.FIRST_UPDATE);
+                boolean result = (Boolean) ACache.get(context).getAsObject(RNBridgeConstants.FIRST_UPDATE);
                 if (result) {
                     // 解压到根目录
                     FileUtils.decompression(FileConstant.JS_PATCH_LOCAL_FOLDER);
