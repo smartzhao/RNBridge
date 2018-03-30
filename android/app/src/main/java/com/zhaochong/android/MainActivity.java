@@ -1,5 +1,6 @@
 package com.zhaochong.android;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -18,12 +20,17 @@ import com.rnbridge.constants.FileConstant;
 import com.rnbridge.constants.RNBridgeConstants;
 import com.rnbridge.hotupdate.HotUpdate;
 import com.rnbridge.rnactivity.BaseReactActivity;
+import com.tbruyelle.rxpermissions2.Permission;
+import com.tbruyelle.rxpermissions2.RxPermissions;
+
+import io.reactivex.functions.Consumer;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "zhaochong_main";
     private long mDownLoadId;
     private CompleteReceiver localReceiver;
-    private String token ="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwNTA0IiwiYXVkIjoiYnJvd3NlciIsImlhdCI6MTUyMDQyMjI2NiwibmJmIjoxNTIwNDIyMjY2LCJleHAiOjE1MjA0MjIyNzQxODMsImlzcyI6ImVjYXJ4IiwianRpIjoxNTIwNDIyMjY2LCJjbGllbnRJZCI6ImJyb3dzZXIiLCJ1aWQiOiIxMDAwNTA0IiwiYXBwSWQiOiJNODIwaWdpaTVsTDR0Y3kiLCJlbnYiOiJ0ZXN0aW5nIn0.2-Fx7Gv5MmFBUWChi2HaYvUijXMaFqj4x9F08CIno48";
+    private String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwNTA0IiwiYXVkIjoiYnJvd3NlciIsImlhdCI6MTUyMDQyMjI2NiwibmJmIjoxNTIwNDIyMjY2LCJleHAiOjE1MjA0MjIyNzQxODMsImlzcyI6ImVjYXJ4IiwianRpIjoxNTIwNDIyMjY2LCJjbGllbnRJZCI6ImJyb3dzZXIiLCJ1aWQiOiIxMDAwNTA0IiwiYXBwSWQiOiJNODIwaWdpaTVsTDR0Y3kiLCJlbnYiOiJ0ZXN0aW5nIn0.2-Fx7Gv5MmFBUWChi2HaYvUijXMaFqj4x9F08CIno48";
     Bundle bundle = new Bundle();
     KProgressHUD hud;
 
@@ -32,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         registeReceiver();
+        showRxPermissions();
     }
 
     @Override
@@ -42,8 +50,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        bundle.putString("accessToken",token);
-        bundle.putString("userId","15712893500");
+        bundle.putString("accessToken", token);
+        bundle.putString("userId", "15712893500");
         if (hasFocus) {
             //FIXME 首先禁止预加载，1.防止内存过大 2.加载过后无法点击
          /* RNBridgeManager.getInstance().preLoad(MainActivity.this,
@@ -70,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "mModule is " + MainApplication.getReactPackage().mModule, Toast.LENGTH_SHORT).show();
                 return;
             }
-            MainApplication.getReactPackage().mModule.nativeCallRn(RNBridgeConstants.NATIVECALLRN_EVENT,"hello");
+            MainApplication.getReactPackage().mModule.nativeCallRn(RNBridgeConstants.NATIVECALLRN_EVENT, "hello");
         }
     }
 
@@ -128,9 +136,9 @@ public class MainActivity extends AppCompatActivity {
                 .getInstance()
                 .setLaunchOptions(bundle)
                 .setComponentName("RnBase")
-                .setBundleAssetName( "index.dataMall.bundle")
+                .setBundleAssetName("index.dataMall.bundle")
                 .startRNActivity(MainActivity.this);
-       // RNBridgeManager.startRNActivity(MainActivity.this, "index.dataMall.bundle", "index.dataMall", "RnBase",null);
+        // RNBridgeManager.startRNActivity(MainActivity.this, "index.dataMall.bundle", "index.dataMall", "RnBase",null);
     }
 
     public void tovpcenter(View view) {
@@ -140,9 +148,9 @@ public class MainActivity extends AppCompatActivity {
                 .setLaunchOptions(bundle)
                 .setComponentName("RnBase")
                 .setBundleAssetName("index.VPCenter.bundle")
-                .setCustomProgressParams("加载中。。。。","测试中",KProgressHUD.Style.SPIN_INDETERMINATE)
-                .setNativeContants("RNContants","我是Android常量，hello  RN")
-              //  .setRnPushlishMsgListener()
+                .setCustomProgressParams("加载中。。。。", "测试中", KProgressHUD.Style.SPIN_INDETERMINATE)
+                .setNativeContants("RNContants", "我是Android常量，hello  RN")
+                //  .setRnPushlishMsgListener()
                 .startRNActivity(MainActivity.this);
     }
 
@@ -159,6 +167,39 @@ public class MainActivity extends AppCompatActivity {
                 HotUpdate.handleZIP(getApplicationContext());
             }
         }
+    }
+
+
+    public void showRxPermissions() {
+        RxPermissions rxPermission = new RxPermissions(MainActivity.this);
+        rxPermission
+                .requestEach(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.READ_CALENDAR,
+                        Manifest.permission.READ_CALL_LOG,
+                        Manifest.permission.READ_CONTACTS,
+                        Manifest.permission.READ_PHONE_STATE,
+                        Manifest.permission.READ_SMS,
+                        Manifest.permission.RECORD_AUDIO,
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.CALL_PHONE,
+                        Manifest.permission.SYSTEM_ALERT_WINDOW,
+                        Manifest.permission.SEND_SMS)
+                .subscribe(new Consumer<Permission>() {
+                    @Override
+                    public void accept(Permission permission) throws Exception {
+                        if (permission.granted) {
+                            // 用户已经同意该权限
+                            Log.d(TAG, permission.name + " is granted.");
+                        } else if (permission.shouldShowRequestPermissionRationale) {
+                            // 用户拒绝了该权限，没有选中『不再询问』（Never ask again）,那么下次再次启动时，还会提示请求权限的对话框
+                            Log.d(TAG, permission.name + " is denied. More info should be provided.");
+                        } else {
+                            // 用户拒绝了该权限，并且选中『不再询问』
+                            Log.d(TAG, permission.name + " is denied.");
+                        }
+                    }
+                });
     }
 
     @Override
