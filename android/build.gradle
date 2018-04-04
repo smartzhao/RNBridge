@@ -23,6 +23,9 @@ allprojects {
             // All of React Native (JS, Android binaries) is installed from npm
             url "$projectDir/../../node_modules/react-native/android"//Fixme 此处是坑人
         }
+        maven {
+            url "https://maven.google.com"
+        }
         maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'https://jitpack.io' }
     }

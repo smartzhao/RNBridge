@@ -65,11 +65,15 @@ public class ReactNativePreLoader {
      * @param bundleAssetName
      */
     public static void deatchView(String bundleAssetName) {
+        ViewGroup parent;
+        ReactRootView rootView;
         try {
-            ReactRootView rootView = getReactRootView(bundleAssetName);
-            ViewGroup parent = (ViewGroup) rootView.getParent();
-            if (parent != null) {
-                parent.removeView(rootView);
+            rootView = getReactRootView(bundleAssetName);
+            if (rootView != null) {
+                parent = (ViewGroup) rootView.getParent();
+                if (parent != null) {
+                    parent.removeView(rootView);
+                }
             }
         } catch (Throwable e) {
             Log.e("ReactNativePreLoader", e.getMessage());
