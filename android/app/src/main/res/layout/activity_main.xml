@@ -76,4 +76,5 @@
         android:padding="10dp"
         android:text="向RN发消息"
         android:textColor="@android:color/white" />
+
 </RelativeLayout>

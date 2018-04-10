@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.zhaochong.android">
 
-    <uses-sdk tools:overrideLibrary="com.facebook.react" />
+  <!--  <uses-sdk tools:overrideLibrary="com.facebook.react" />-->
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />

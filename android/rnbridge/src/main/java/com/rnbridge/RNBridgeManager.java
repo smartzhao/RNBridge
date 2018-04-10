@@ -117,24 +117,26 @@ public class RNBridgeManager {
     /**
      * 自定义跳转activity
      *
-     * @param context
+     * @param activity
      * @param cls
      */
-    public static void startRNActivity(Context context, Class<?> cls) {
+    public static void startRNActivity( Activity activity, Class<? extends BaseReactActivity> cls) {
         if (cls != null) {
-            context.startActivity(new Intent(context, cls));
+            activity.startActivity(new Intent(activity, cls));
+        } else {
+            startRNActivity(activity);
         }
-        startRNActivity(context);
     }
 
     /**
      * 跳转到RN界面
      *
-     * @param context
+     * @param activity
      */
-    public static void startRNActivity(Context context) {
-        context.startActivity(new Intent(context, BaseReactActivity.class));
+    public static void startRNActivity(Activity activity) {
+        activity.startActivity(new Intent(activity, BaseReactActivity.class));
     }
+
 
     /**
      * 设置ReactInstanceManager
@@ -377,6 +379,7 @@ public class RNBridgeManager {
 
     /**
      * 获取RnPushlishMsgListener
+     *
      * @return
      */
     public RNPushlishMsgListener getRnPushlishMsgListener() {
@@ -385,6 +388,7 @@ public class RNBridgeManager {
 
     /**
      * 获取同步发送信息
+     *
      * @param rnPushlishMsgListener
      * @return
      */
@@ -395,12 +399,13 @@ public class RNBridgeManager {
 
     /**
      * 处理rnCallNativeAction
+     *
      * @param action
      * @param params
      * @param mReactApplicationContext
      * @return
      */
-    public RNBridgeManager rnCallNativeAction(String action, String params,ReactApplicationContext mReactApplicationContext) {
+    public RNBridgeManager rnCallNativeAction(String action, String params, ReactApplicationContext mReactApplicationContext) {
         switch (action) {
             case RNBridgeConstants.ACTION_DISSMISS_PROGRESSHUD:
                 if (RNBridgeManager.getInstance().getCustomProgress() != null) {
