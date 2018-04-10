@@ -25,6 +25,7 @@ import com.facebook.soloader.SoLoader;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -52,6 +53,7 @@ public class RNBridgeManager {
     private View progressView;
     private RNPushlishMsgListener rnPushlishMsgListener;
     private Map<String, Object> mapContants = new HashMap<>();
+    private static Map<String, Activity> destoryMap = new HashMap<>();
 
     /**
      * 私有构造函数
@@ -396,7 +398,25 @@ public class RNBridgeManager {
         this.rnPushlishMsgListener = rnPushlishMsgListener;
         return this;
     }
+    /**
+     * 添加到销毁队列
+     *
+     * @param activity 要销毁的activity
+     */
 
+    public static void addDestoryActivity(Activity activity, String activityName) {
+        destoryMap.put(activityName, activity);
+    }
+
+    /**
+     * 销毁指定Activity
+     */
+    public static void destoryActivity(String activityName) {
+        Set<String> keySet = destoryMap.keySet();
+        for (String key : keySet) {
+            destoryMap.get(key).finish();
+        }
+    }
     /**
      * 处理rnCallNativeAction
      *

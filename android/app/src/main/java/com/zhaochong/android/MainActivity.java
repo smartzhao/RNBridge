@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.rnbridge.RNBridgeManager;
+import com.rnbridge.callback.RNPushlishMsgListener;
 import com.rnbridge.constants.FileConstant;
 import com.rnbridge.constants.RNBridgeConstants;
 import com.rnbridge.hotupdate.HotUpdate;
@@ -142,16 +143,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tovpcenter(View view) {
-        startActivity(new Intent(this, TestActivity.class));
-        /*RNBridgeManager
+        RNBridgeManager
                 .getInstance()
                 .setLaunchOptions(bundle)
                 .setComponentName("RnBase")
                 .setBundleAssetName("index.VPCenter.bundle")
                 .setCustomProgressParams("加载中。。。。", "测试中", KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setNativeContants("RNContants", "我是Android常量，hello  RN")
-                //  .setRnPushlishMsgListener()
-                .startRNActivity(MainActivity.this);*/
+                .setRnPushlishMsgListener(new RNPushlishMsgListener() {
+                    @Override
+                    public String rnCallNativeFromPromise(String s) {
+                        return null;
+                    }
+
+                    @Override
+                    public String rnCallNativeFromCallback(String s) {
+                        return null;
+                    }
+
+                    @Override
+                    public void rnCallNative(String s, String s1) {
+                       RNBridgeManager.destoryActivity("BaseReactActivity");
+
+                    }
+                })
+                .startRNActivity(MainActivity.this);
     }
 
     public void torn(View view) {

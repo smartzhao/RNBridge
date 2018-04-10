@@ -82,6 +82,7 @@ public class PreLoadReactDelegate {
        // RNBridgeManager.getInstance().createProgress(mActivity);
         iCustomProgress.getActivity(mActivity);
         this.iCustomProgress.show();
+        RNBridgeManager.addDestoryActivity(mActivity,"BaseReactActivity");
     }
 
     public void onResume() {
@@ -103,7 +104,7 @@ public class PreLoadReactDelegate {
     public void onDestroy() {
 
         if (mReactRootView != null) {
-            mReactRootView.unmountReactApplication();
+          //  mReactRootView.unmountReactApplication();
             mReactRootView = null;
         }
         if (getReactNativeHost().hasInstance()) {
