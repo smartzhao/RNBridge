@@ -412,7 +412,7 @@ public class RNBridgeManager {
                     RNBridgeManager.getInstance().getCustomProgress().dismiss();
                 }
                 break;
-            case RNBridgeConstants.ACTION_COLSE_REACTNATIVE:
+          /*  case RNBridgeConstants.ACTION_COLSE_REACTNATIVE:
                 //关闭ReactNative
                 try {
                     Activity currentActivity = mReactApplicationContext.getCurrentActivity();
@@ -438,7 +438,7 @@ public class RNBridgeManager {
                     throw new JSApplicationIllegalArgumentException(
                             "不能打开Activity : " + e.getMessage());
                 }
-                break;
+                break;*/
             default:
                 if (rnPushlishMsgListener != null) {
                     rnPushlishMsgListener.rnCallNative(action, params);

@@ -81,7 +81,7 @@ public abstract class BaseReactNativeHost extends ReactNativeHost {
                 .setRedBoxHandler(getRedBoxHandler())
                 .setJavaScriptExecutorFactory(getJavaScriptExecutorFactory())
                 .setUIImplementationProvider(getUIImplementationProvider())
-                .setInitialLifecycleState(LifecycleState.BEFORE_CREATE);
+                .setInitialLifecycleState(LifecycleState.RESUMED);
 
         for (ReactPackage reactPackage : getPackages()) {
             builder.addPackage(reactPackage);

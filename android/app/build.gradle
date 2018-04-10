@@ -60,8 +60,8 @@ dependencies {
     compile 'com.facebook.fresco:fresco:1.1.0'
     //RN渐变色组件
     compile project(':react-native-linear-gradient')
-    compile project(path: ':rnbridge')
-    //    compile 'com.github.zorozhao:RNBridge:v0.04'
+    //compile project(path: ':rnbridge')
+    compile 'com.github.zorozhao:RNBridge:v0.07'
     compile 'org.jetbrains:annotations-java5:15.0'
     compile 'org.jetbrains:annotations-java5:15.0'
     compile project(path: ':react-native-vector-icons')

@@ -142,8 +142,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tovpcenter(View view) {
-
-        RNBridgeManager
+        startActivity(new Intent(this, TestActivity.class));
+        /*RNBridgeManager
                 .getInstance()
                 .setLaunchOptions(bundle)
                 .setComponentName("RnBase")
@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 .setCustomProgressParams("加载中。。。。", "测试中", KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setNativeContants("RNContants", "我是Android常量，hello  RN")
                 //  .setRnPushlishMsgListener()
-                .startRNActivity(MainActivity.this);
+                .startRNActivity(MainActivity.this);*/
     }
 
     public void torn(View view) {
