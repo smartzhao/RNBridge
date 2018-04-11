@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
  */
 public class BaseReactActivity extends PreLoadReactActivity {
 
+
     @Nullable
     @Override
     protected String getMainComponentName() {

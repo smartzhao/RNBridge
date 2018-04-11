@@ -104,13 +104,13 @@ public class PreLoadReactDelegate {
     public void onDestroy() {
 
         if (mReactRootView != null) {
-          //  mReactRootView.unmountReactApplication();
+            mReactRootView.unmountReactApplication();
             mReactRootView = null;
         }
         if (getReactNativeHost().hasInstance()) {
             getReactInstanceManager().onHostDestroy(mActivity);
         }
-
+        getReactNativeHost().clear();
         // 清除View
         ReactNativePreLoader.deatchView(bundleAssetName);
     }
