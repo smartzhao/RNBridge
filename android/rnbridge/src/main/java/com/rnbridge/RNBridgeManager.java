@@ -414,7 +414,20 @@ public class RNBridgeManager {
     public static void destoryActivity(String activityName) {
         Set<String> keySet = destoryMap.keySet();
         for (String key : keySet) {
-            destoryMap.get(key).finish();
+            if (destoryMap.get(key) != null) {
+                destoryMap.get(key).finish();
+            }
+        }
+    }
+    /**
+     * 移除指定Activity
+     */
+    public static void removeActivity(String activityName) {
+        Set<String> keySet = destoryMap.keySet();
+        for (String key : keySet) {
+            if (destoryMap.get(key) != null) {
+                destoryMap.remove(key);
+            }
         }
     }
     /**

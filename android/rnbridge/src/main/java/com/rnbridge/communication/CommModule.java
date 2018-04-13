@@ -1,11 +1,8 @@
 package com.rnbridge.communication;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.facebook.react.bridge.JSApplicationIllegalArgumentException;
 import com.rnbridge.RNBridgeManager;
 import com.rnbridge.callback.RNPushlishMsgListener;
 import com.facebook.react.bridge.Callback;
@@ -61,7 +58,7 @@ public class CommModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void rnCallNativeAction(String action) {
 
-        RNBridgeManager.getInstance().rnCallNativeAction(action, null,mContext);
+        RNBridgeManager.getInstance().rnCallNativeAction(action, null, mContext);
     }
 
 
@@ -74,7 +71,7 @@ public class CommModule extends ReactContextBaseJavaModule {
     @ReactMethod
     public void rnCallNativeaAddParams(String action, String params) {
 
-        RNBridgeManager.getInstance().rnCallNativeAction(action, params,mContext);
+        RNBridgeManager.getInstance().rnCallNativeAction(action, params, mContext);
     }
 
     /**
@@ -89,9 +86,24 @@ public class CommModule extends ReactContextBaseJavaModule {
     }
 
 
-    /**
+    /*************************************
      * 下面是React Native主动调用方法获取
+     * ***********************************
      */
+
+
+
+
+    /**
+     * Promise
+     *
+     * @param msg
+     * @param promise
+     */
+    @ReactMethod
+    public void rnPromise(String msg, Promise promise) {
+        setPromiseParams(msg, null, promise);
+    }
 
 
     /**
@@ -102,15 +114,21 @@ public class CommModule extends ReactContextBaseJavaModule {
      * @param callback
      */
     @ReactMethod
-    public void rnCallNativeFromCallback(String msg, Callback callback) {
-        Log.d("---Callback", "test" + msg);
-        // 1.处理业务逻辑...
-        String result = null;
-        if (rnPushlishMsgListener != null) {
-            result = rnPushlishMsgListener.rnCallNativeFromCallback(msg);
-        }
-        // 2.回调RN,即将处理结果返回给RN
-        callback.invoke(result);
+    public void rnCallback(String msg, Callback callback) {
+        setCallBackParams(msg, null, callback);
+    }
+
+    /**
+     * Callback 方式
+     * rn调用Native,并获取返回值
+     *
+     * @param msg
+     * @param callback
+     * @param params
+     */
+    @ReactMethod
+    public void rnCallbackAddParams(String msg, String params, Callback callback) {
+        setCallBackParams(msg, params, callback);
     }
 
     /**
@@ -118,18 +136,11 @@ public class CommModule extends ReactContextBaseJavaModule {
      *
      * @param msg
      * @param promise
+     * @param params
      */
     @ReactMethod
-    public void rnCallNativeFromPromise(String msg, Promise promise) {
-
-        Log.d("---promise", "test" + msg);
-        // 1.处理业务逻辑...
-        String result = null;
-        if (rnPushlishMsgListener != null) {
-            result = rnPushlishMsgListener.rnCallNativeFromPromise(msg);
-        }
-        // 2.回调RN,即将处理结果返回给RN
-        promise.resolve(result);
+    public void rnPromiseAddParams(String msg, String params, Promise promise) {
+        setPromiseParams(msg, params, promise);
     }
 
     /**
@@ -142,5 +153,27 @@ public class CommModule extends ReactContextBaseJavaModule {
         params.putAll(RNBridgeManager.getInstance().getNativeContantMap());
         Log.d("---params", "test");
         return params;
+    }
+
+    private void setCallBackParams(String msg, String params, Callback callback) {
+        Log.d("---Callback", "test" + msg);
+        // 1.处理业务逻辑...
+        String result = null;
+        if (rnPushlishMsgListener != null) {
+            result = rnPushlishMsgListener.rnCallNativeFromCallback(msg, params);
+        }
+        // 2.回调RN,即将处理结果返回给RN
+        callback.invoke(result);
+    }
+
+    private void setPromiseParams(String msg, String params, Promise promise) {
+        Log.d("---promise", "test" + msg);
+        // 1.处理业务逻辑...
+        String result = null;
+        if (rnPushlishMsgListener != null) {
+            result = rnPushlishMsgListener.rnCallNativeFromPromise(msg, params);
+        }
+        // 2.回调RN,即将处理结果返回给RN
+        promise.resolve(result);
     }
 }

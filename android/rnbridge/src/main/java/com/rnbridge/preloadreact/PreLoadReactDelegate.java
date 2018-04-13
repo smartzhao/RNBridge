@@ -21,6 +21,7 @@ import com.facebook.react.devsupport.DoubleTapReloadRecognizer;
 import com.facebook.react.modules.core.DefaultHardwareBackBtnHandler;
 import com.facebook.react.modules.core.PermissionListener;
 import com.rnbridge.callback.ICustomProgress;
+import com.rnbridge.callback.RNPushlishMsgListener;
 
 import javax.annotation.Nullable;
 
@@ -83,6 +84,7 @@ public class PreLoadReactDelegate {
         iCustomProgress.getActivity(mActivity);
         this.iCustomProgress.show();
         RNBridgeManager.addDestoryActivity(mActivity,"BaseReactActivity");
+        RNBridgeManager.getInstance().setRnPushlishMsgListener((RNPushlishMsgListener) mActivity);
     }
 
     public void onResume() {
@@ -110,6 +112,8 @@ public class PreLoadReactDelegate {
         if (getReactNativeHost().hasInstance()) {
             getReactInstanceManager().onHostDestroy(mActivity);
         }
+        RNBridgeManager.removeActivity("BaseReactActivity");
+        RNBridgeManager.destoryActivity("BaseReactActivity");
         getReactNativeHost().clear();
         // 清除View
         ReactNativePreLoader.deatchView(bundleAssetName);

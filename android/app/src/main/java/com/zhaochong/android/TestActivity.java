@@ -1,6 +1,5 @@
 package com.zhaochong.android;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -28,17 +27,19 @@ public class TestActivity extends BaseReactActivity implements RNPushlishMsgList
     }
 
     @Override
-    public String rnCallNativeFromPromise(String msg) {
+    public String rnCallNativeFromPromise(String s, String msg) {
         return null;
     }
 
     @Override
-    public String rnCallNativeFromCallback(String msg) {
+    public String rnCallNativeFromCallback(String s, String msg) {
         return null;
     }
 
     @Override
     public void rnCallNative(String s, String action) {
+
+
 
     }
 }

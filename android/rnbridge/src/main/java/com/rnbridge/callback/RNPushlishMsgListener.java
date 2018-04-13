@@ -6,11 +6,11 @@ package com.rnbridge.callback;
 
 public interface RNPushlishMsgListener {
 
-    String rnCallNativeFromPromise(String msg);
+    String rnCallNativeFromPromise(String action, String params);
 
-    String rnCallNativeFromCallback(String msg);
+    String rnCallNativeFromCallback(String action, String params);
 
-    void rnCallNative(String s, String action);
+    void rnCallNative(String action, String params);
 
 
     // void getConstants();

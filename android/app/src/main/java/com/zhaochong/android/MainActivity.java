@@ -20,7 +20,6 @@ import com.rnbridge.callback.RNPushlishMsgListener;
 import com.rnbridge.constants.FileConstant;
 import com.rnbridge.constants.RNBridgeConstants;
 import com.rnbridge.hotupdate.HotUpdate;
-import com.rnbridge.rnactivity.BaseReactActivity;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "zhaochong_main";
     private long mDownLoadId;
     private CompleteReceiver localReceiver;
-    private String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMDAwNTA0IiwiYXVkIjoiYnJvd3NlciIsImlhdCI6MTUyMDQyMjI2NiwibmJmIjoxNTIwNDIyMjY2LCJleHAiOjE1MjA0MjIyNzQxODMsImlzcyI6ImVjYXJ4IiwianRpIjoxNTIwNDIyMjY2LCJjbGllbnRJZCI6ImJyb3dzZXIiLCJ1aWQiOiIxMDAwNTA0IiwiYXBwSWQiOiJNODIwaWdpaTVsTDR0Y3kiLCJlbnYiOiJ0ZXN0aW5nIn0.2-Fx7Gv5MmFBUWChi2HaYvUijXMaFqj4x9F08CIno48";
+    private String token = " eyJjdHkiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxNTcxMjg5MzUw MCIsInRzY0dyYW50cyI6bnVsbCwiZXhwIjoxNTM4OTg5NTU0LCJpYXQiOjE1MjM0Mzc1NTQsIm5vbmNlIjoiMDI2RjFGRjI4RDZDMTUyMzQzNzU1NDk0OCJ9.MbXCnnhoaj8bTBobpTGI3bdJhZ4xpzpuA9XpMHyY8MQ";
     Bundle bundle = new Bundle();
     KProgressHUD hud;
 
@@ -151,13 +150,14 @@ public class MainActivity extends AppCompatActivity {
                 .setCustomProgressParams("加载中。。。。", "测试中", KProgressHUD.Style.SPIN_INDETERMINATE)
                 .setNativeContants("RNContants", "我是Android常量，hello  RN")
                 .setRnPushlishMsgListener(new RNPushlishMsgListener() {
+
                     @Override
-                    public String rnCallNativeFromPromise(String s) {
+                    public String rnCallNativeFromPromise(String msg, String params) {
                         return null;
                     }
 
                     @Override
-                    public String rnCallNativeFromCallback(String s) {
+                    public String rnCallNativeFromCallback(String msg, String params) {
                         return null;
                     }
 
