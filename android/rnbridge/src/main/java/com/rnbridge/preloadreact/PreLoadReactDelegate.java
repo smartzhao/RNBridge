@@ -112,8 +112,8 @@ public class PreLoadReactDelegate {
         if (getReactNativeHost().hasInstance()) {
             getReactInstanceManager().onHostDestroy(mActivity);
         }
-        RNBridgeManager.removeActivity("BaseReactActivity");
-        RNBridgeManager.destoryActivity("BaseReactActivity");
+       // RNBridgeManager.removeActivity("BaseReactActivity");
+     //   RNBridgeManager.destoryActivity("BaseReactActivity");
         getReactNativeHost().clear();
         // 清除View
         ReactNativePreLoader.deatchView(bundleAssetName);
