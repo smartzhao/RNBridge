@@ -124,9 +124,9 @@ public class PreLoadReactDelegate {
         ViewGroup parent;
         if (mReactRootView != null) {
             parent = (ViewGroup) mReactRootView.getParent();
-            if (parent != null) {
+           /* if (parent != null) {
                 parent.removeView(mReactRootView);
-            }
+            }*/
             mReactRootView.unmountReactApplication();
             mReactRootView = null;
         }
