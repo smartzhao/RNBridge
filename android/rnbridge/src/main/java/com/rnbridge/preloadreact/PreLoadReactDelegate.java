@@ -114,7 +114,7 @@ public class PreLoadReactDelegate {
         }
        // RNBridgeManager.removeActivity("BaseReactActivity");
      //   RNBridgeManager.destoryActivity("BaseReactActivity");
-        getReactNativeHost().clear();
+     //   getReactNativeHost().clear();
         // 清除View
         ReactNativePreLoader.deatchView(bundleAssetName);
     }
