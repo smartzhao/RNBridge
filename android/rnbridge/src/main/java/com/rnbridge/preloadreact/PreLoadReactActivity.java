@@ -1,5 +1,6 @@
 package com.rnbridge.preloadreact;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -18,7 +19,7 @@ import javax.annotation.Nullable;
  * 预加载Activity基类
  * Created by zhaochong on 2017/12/20.
  */
-public class PreLoadReactActivity extends ReactActivity implements DefaultHardwareBackBtnHandler, PermissionAwareActivity {
+public class PreLoadReactActivity extends Activity implements DefaultHardwareBackBtnHandler, PermissionAwareActivity {
 
     private PreLoadReactDelegate mPreLoadReactDelegate;
 
@@ -133,6 +134,11 @@ public class PreLoadReactActivity extends ReactActivity implements DefaultHardwa
     @Override
     public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults) {
         mPreLoadReactDelegate.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    public void invokeDefaultOnBackPressed() {
+
     }
 }
 

@@ -224,13 +224,4 @@ public class MainActivity extends AppCompatActivity {
         unregisterReceiver(localReceiver);
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        switch (keyCode) {
-            case KeyEvent.KEYCODE_BACK:
-                finish();
-                break;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
 }

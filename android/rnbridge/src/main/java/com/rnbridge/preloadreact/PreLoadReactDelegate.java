@@ -84,7 +84,7 @@ public class PreLoadReactDelegate {
         iCustomProgress.getActivity(mActivity);
         this.iCustomProgress.show();
         RNBridgeManager.addDestoryActivity(mActivity,"BaseReactActivity");
-        RNBridgeManager.getInstance().setRnPushlishMsgListener((RNPushlishMsgListener) mActivity);
+//        RNBridgeManager.getInstance().setRnPushlishMsgListener((RNPushlishMsgListener) mActivity);
     }
 
     public void onResume() {
