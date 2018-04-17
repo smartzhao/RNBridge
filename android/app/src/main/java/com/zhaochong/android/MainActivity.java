@@ -20,6 +20,7 @@ import com.rnbridge.callback.RNPushlishMsgListener;
 import com.rnbridge.constants.FileConstant;
 import com.rnbridge.constants.RNBridgeConstants;
 import com.rnbridge.hotupdate.HotUpdate;
+import com.rnbridge.rnactivity.BaseReactActivity;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
@@ -167,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 })
-                .startRNActivity(MainActivity.this);
+                .startRNActivity(MainActivity.this, BaseReactActivity.class);
     }
 
     public void torn(View view) {

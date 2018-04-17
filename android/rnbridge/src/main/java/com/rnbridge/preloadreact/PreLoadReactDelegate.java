@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.KeyEvent;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.kaopiz.kprogresshud.KProgressHUD;
@@ -32,7 +33,7 @@ import javax.annotation.Nullable;
 
 public class PreLoadReactDelegate {
 
-    private final Activity mActivity;
+    private  Activity mActivity;
     private ReactRootView mReactRootView;
     private Callback mPermissionsCallback;
     private final String mMainComponentName;
@@ -104,8 +105,12 @@ public class PreLoadReactDelegate {
     }
 
     public void onDestroy() {
-
+        ViewGroup parent;
         if (mReactRootView != null) {
+                parent = (ViewGroup) mReactRootView.getParent();
+                if (parent != null) {
+                    parent.removeView(mReactRootView);
+            }
             mReactRootView.unmountReactApplication();
             mReactRootView = null;
         }
