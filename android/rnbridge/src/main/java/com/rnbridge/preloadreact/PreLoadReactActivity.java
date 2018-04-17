@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
  * 预加载Activity基类
  * Created by zhaochong on 2017/12/20.
  */
-public class PreLoadReactActivity extends Activity implements DefaultHardwareBackBtnHandler, PermissionAwareActivity {
+public class PreLoadReactActivity extends ReactActivity implements DefaultHardwareBackBtnHandler, PermissionAwareActivity {
 
     private PreLoadReactDelegate mPreLoadReactDelegate;
 

@@ -2,11 +2,13 @@ package com.rnbridge.preloadreact;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -33,64 +35,78 @@ import javax.annotation.Nullable;
 
 public class PreLoadReactDelegate {
 
-    private  Activity mActivity;
+    private Activity mActivity;
     private ReactRootView mReactRootView;
     private Callback mPermissionsCallback;
     private final String mMainComponentName;
-    private  Bundle initialProperties;
-    private  String bundleAssetName;
+    private Bundle initialProperties;
+    private String bundleAssetName;
+    private final @Nullable
+    FragmentActivity mFragmentActivity;
     private PermissionListener mPermissionListener;
     private final int REQUEST_OVERLAY_PERMISSION_CODE = 1111;
     private DoubleTapReloadRecognizer mDoubleTapReloadRecognizer;
     private ICustomProgress iCustomProgress;
 
-    public PreLoadReactDelegate(Activity activity, @Nullable String mainComponentName,@Nullable String bundleAssetName,@Nullable Bundle initialProperties,@Nullable ICustomProgress iCustomProgress) {
+    protected ReactRootView createRootView() {
+        return new ReactRootView(getContext());
+    }
+
+    public PreLoadReactDelegate(Activity activity, @Nullable String mainComponentName, @Nullable String bundleAssetName, @Nullable Bundle initialProperties, @Nullable ICustomProgress iCustomProgress) {
         this.mActivity = activity;
         this.mMainComponentName = mainComponentName;
         this.initialProperties = initialProperties;
         this.bundleAssetName = bundleAssetName;
         this.iCustomProgress = iCustomProgress;
+        mFragmentActivity = null;
+    }
+
+    public PreLoadReactDelegate(FragmentActivity fragmentActivity, @Nullable String mainComponentName, @Nullable String bundleAssetName, @Nullable Bundle initialProperties, @Nullable ICustomProgress iCustomProgress) {
+        this.mActivity = null;
+        this.mMainComponentName = mainComponentName;
+        this.initialProperties = initialProperties;
+        this.bundleAssetName = bundleAssetName;
+        this.iCustomProgress = iCustomProgress;
+        mFragmentActivity = fragmentActivity;
     }
 
     public void onCreate() {
         boolean needsOverlayPermission = false;
         if (getReactNativeHost().getUseDeveloperSupport() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             // Get permission to show redbox in dev builds.
-            if (!Settings.canDrawOverlays(mActivity)) {
+            if (!Settings.canDrawOverlays(getContext())) {
                 needsOverlayPermission = true;
-                Intent serviceIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + mActivity.getPackageName()));
-                mActivity.startActivityForResult(serviceIntent, REQUEST_OVERLAY_PERMISSION_CODE);
+                Intent serviceIntent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPlainActivity().getPackageName()));
+                ((Activity) getContext()).startActivityForResult(serviceIntent, REQUEST_OVERLAY_PERMISSION_CODE);
             }
         }
 
         if (bundleAssetName != null && !needsOverlayPermission) {
             // 1.从缓存中获取RootView
             mReactRootView = ReactNativePreLoader.getReactRootView(bundleAssetName);
-
-            if(mReactRootView == null) {
-
-                // 2.缓存中不存在RootView,直接创建
-                mReactRootView = new ReactRootView(mActivity);
-                mReactRootView.startReactApplication(
-                        getReactInstanceManager(),
-                        mMainComponentName,
-                        initialProperties);
+            if (mReactRootView != null) {
+                throw new IllegalStateException("Cannot loadApp while app is already running.");
             }
+            // 2.缓存中不存在RootView,直接创建
+            mReactRootView = createRootView();
+            mReactRootView.startReactApplication(
+                    getReactInstanceManager(),
+                    mMainComponentName,
+                    initialProperties);
             // 3.将RootView设置到Activity布局
-            mActivity.setContentView(mReactRootView);
+            getPlainActivity().setContentView(mReactRootView);
         }
 
         mDoubleTapReloadRecognizer = new DoubleTapReloadRecognizer();
-       // RNBridgeManager.getInstance().createProgress(mActivity);
-        iCustomProgress.getActivity(mActivity);
+        iCustomProgress.getActivity(getPlainActivity());
         this.iCustomProgress.show();
-        RNBridgeManager.addDestoryActivity(mActivity,"BaseReactActivity");
+        RNBridgeManager.addDestoryActivity(getPlainActivity(), "BaseReactActivity");
 //        RNBridgeManager.getInstance().setRnPushlishMsgListener((RNPushlishMsgListener) mActivity);
     }
 
     public void onResume() {
         if (getReactNativeHost().hasInstance()) {
-            getReactInstanceManager().onHostResume(mActivity, (DefaultHardwareBackBtnHandler)mActivity);
+            getReactInstanceManager().onHostResume(getPlainActivity(), (DefaultHardwareBackBtnHandler) getPlainActivity());
         }
         if (mPermissionsCallback != null) {
             mPermissionsCallback.invoke();
@@ -100,26 +116,26 @@ public class PreLoadReactDelegate {
 
     public void onPause() {
         if (getReactNativeHost().hasInstance()) {
-            getReactInstanceManager().onHostPause(mActivity);
+            getReactInstanceManager().onHostPause(getPlainActivity());
         }
     }
 
     public void onDestroy() {
         ViewGroup parent;
         if (mReactRootView != null) {
-                parent = (ViewGroup) mReactRootView.getParent();
-                if (parent != null) {
-                    parent.removeView(mReactRootView);
+            parent = (ViewGroup) mReactRootView.getParent();
+            if (parent != null) {
+                parent.removeView(mReactRootView);
             }
             mReactRootView.unmountReactApplication();
             mReactRootView = null;
         }
         if (getReactNativeHost().hasInstance()) {
-            getReactInstanceManager().onHostDestroy(mActivity);
+            getReactInstanceManager().onHostDestroy(getPlainActivity());
         }
-       // RNBridgeManager.removeActivity("BaseReactActivity");
-     //   RNBridgeManager.destoryActivity("BaseReactActivity");
-     //   getReactNativeHost().clear();
+        // RNBridgeManager.removeActivity("BaseReactActivity");
+        //   RNBridgeManager.destoryActivity("BaseReactActivity");
+        //   getReactNativeHost().clear();
         // 清除View
         ReactNativePreLoader.deatchView(bundleAssetName);
     }
@@ -134,7 +150,7 @@ public class PreLoadReactDelegate {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (getReactNativeHost().hasInstance()) {
-            getReactInstanceManager().onActivityResult(mActivity, requestCode, resultCode, data);
+            getReactInstanceManager().onActivityResult(getPlainActivity(), requestCode, resultCode, data);
         } else {
             // Did we request overlay permissions?
             if (requestCode == REQUEST_OVERLAY_PERMISSION_CODE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -143,7 +159,7 @@ public class PreLoadReactDelegate {
                         if (mReactRootView != null) {
                             throw new IllegalStateException("Cannot loadApp while app is already running.");
                         }
-                        mReactRootView = new ReactRootView(mActivity);
+                        mReactRootView = new ReactRootView(getPlainActivity());
                         mReactRootView.startReactApplication(
                                 getReactInstanceManager(),
                                 mMainComponentName,
@@ -170,7 +186,7 @@ public class PreLoadReactDelegate {
                 return true;
             }
             boolean didDoubleTapR = Assertions.assertNotNull(mDoubleTapReloadRecognizer)
-                    .didDoubleTapR(keyCode, mActivity.getCurrentFocus());
+                    .didDoubleTapR(keyCode, getPlainActivity().getCurrentFocus());
             if (didDoubleTapR) {
                 getReactInstanceManager().getDevSupportManager().handleReloadJS();
                 return true;
@@ -198,6 +214,7 @@ public class PreLoadReactDelegate {
 
     /**
      * 获取 Application中 ReactNativeHost
+     *
      * @return
      */
     private ReactNativeHost getReactNativeHost() {
@@ -206,10 +223,22 @@ public class PreLoadReactDelegate {
 
     /**
      * 获取 ReactInstanceManager
+     *
      * @return
      */
     private ReactInstanceManager getReactInstanceManager() {
         return getReactNativeHost().getReactInstanceManager();
     }
 
+
+    private Context getContext() {
+        if (mActivity != null) {
+            return mActivity;
+        }
+        return Assertions.assertNotNull(mFragmentActivity);
+    }
+
+    private Activity getPlainActivity() {
+        return ((Activity) getContext());
+    }
 }
