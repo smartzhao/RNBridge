@@ -130,14 +130,14 @@ public class PreLoadReactDelegate {
 
     public void onDestroy() {
         ViewGroup parent;
-        if (mReactRootView != null) {
+       /* if (mReactRootView != null) {
             parent = (ViewGroup) mReactRootView.getParent();
-           /* if (parent != null) {
+           *//* if (parent != null) {
                 parent.removeView(mReactRootView);
-            }*/
+            }*//*
             mReactRootView.unmountReactApplication();
             mReactRootView = null;
-        }
+        }*/
         if (getReactNativeHost().hasInstance()) {
             getReactInstanceManager().onHostDestroy(getPlainActivity());
         }
