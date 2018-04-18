@@ -84,17 +84,25 @@ public class PreLoadReactDelegate {
         if (bundleAssetName != null && !needsOverlayPermission) {
             // 1.从缓存中获取RootView
             mReactRootView = ReactNativePreLoader.getReactRootView(bundleAssetName);
-            if (mReactRootView != null) {
-                throw new IllegalStateException("Cannot loadApp while app is already running.");
+
+
+            if (mMainComponentName != null && !needsOverlayPermission) {
+                // 1.从缓存中获取RootView
+                mReactRootView = ReactNativePreLoader.getReactRootView(mMainComponentName);
+
+                if (mReactRootView == null) {
+
+                    // 2.缓存中不存在RootView,直接创建
+                    mReactRootView = new ReactRootView(mActivity);
+                    mReactRootView.startReactApplication(
+                            getReactInstanceManager(),
+                            mMainComponentName,
+                            null);
+                }
+                // 3.将RootView设置到Activity布局
+                getPlainActivity().setContentView(mReactRootView);
             }
-            // 2.缓存中不存在RootView,直接创建
-            mReactRootView = createRootView();
-            mReactRootView.startReactApplication(
-                    getReactInstanceManager(),
-                    mMainComponentName,
-                    initialProperties);
-            // 3.将RootView设置到Activity布局
-            getPlainActivity().setContentView(mReactRootView);
+
         }
 
         mDoubleTapReloadRecognizer = new DoubleTapReloadRecognizer();
