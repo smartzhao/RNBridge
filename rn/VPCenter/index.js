@@ -1,6 +1,5 @@
 /**
  * Created by Roc on 2017/6/30.
- *React Native相关代码已打包成离线bundle，此处暂时不进行提供代码
  */
 
 import { AppRegistry } from 'react-native';

@@ -14,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.facebook.react.ReactApplication;
 import com.kaopiz.kprogresshud.KProgressHUD;
 import com.rnbridge.RNBridgeManager;
 import com.rnbridge.callback.RNPushlishMsgListener;
@@ -43,9 +44,19 @@ public class MainActivity extends AppCompatActivity {
         showRxPermissions();
     }
 
-    @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume: ");
+    }
+
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause: ");
+    }
+
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "onStop: ");
     }
 
     @Override
@@ -60,11 +71,11 @@ public class MainActivity extends AppCompatActivity {
                     "index.VPCenter.bundle",
                     ((ReactApplication)getApplication()).getReactNativeHost().getReactInstanceManager(),
                    bundle);*/
-          /*     RNBridgeManager.getInstance().preLoad(MainActivity.this,
+               RNBridgeManager.getInstance().preLoad(MainActivity.this,
                     "RnBase",
                     "index.dataMall.bundle",
                     ((ReactApplication)getApplication()).getReactNativeHost().getReactInstanceManager(),
-                    bundle);*/
+                    bundle);
         }
     }
 
@@ -164,7 +175,9 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void rnCallNative(String s, String s1) {
-                       RNBridgeManager.destoryActivity("BaseReactActivity");
+                     //  RNBridgeManager.destoryActivity("BaseReactActivity");
+                        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                        startActivity(intent);
 
                     }
                 })
@@ -223,6 +236,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(localReceiver);
+        Log.d(TAG, "onDestroy: ");
     }
 
 }

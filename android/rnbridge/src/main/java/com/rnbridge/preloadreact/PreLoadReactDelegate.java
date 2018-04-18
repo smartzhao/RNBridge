@@ -227,7 +227,7 @@ public class PreLoadReactDelegate {
      * @return
      */
     private ReactInstanceManager getReactInstanceManager() {
-        return getReactNativeHost().getReactInstanceManager();
+        return RNBridgeManager.getInstance().getReactNativeHost().getReactInstanceManager();
     }
 
 
