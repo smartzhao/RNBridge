@@ -83,7 +83,8 @@ public class PreLoadReactDelegate {
 
         if (bundleAssetName != null && !needsOverlayPermission) {
             // 1.从缓存中获取RootView
-            mReactRootView = ReactNativePreLoader.getReactRootView(bundleAssetName);
+//            mReactRootView = ReactNativePreLoader.getReactRootView(bundleAssetName);
+            mReactRootView =createRootView();
 
 
             if (mMainComponentName != null && !needsOverlayPermission) {
